@@ -1,0 +1,10 @@
+{
+  "name": "Protegrity Data Protection Plugin Suite",
+  "owner": "Saritha-Pty",
+  "description": "Enterprise-grade data discovery, protection, and privacy controls for Cursor IDE using Protegrity AI Developer Edition APIs",
+  "version": "1.0.0",
+  "repository": "https://github.com/Saritha-Pty/cursor-plugin-protegrity-data-protection",
+  "plugins": [
+    "plugins/protegrity-data-protection"
+  ]
+}

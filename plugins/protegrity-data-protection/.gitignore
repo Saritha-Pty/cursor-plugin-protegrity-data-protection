@@ -1,0 +1,10 @@
+.protegrity-logs/
+*.log
+.env
+.env.local
+node_modules/
+.venv/
+__pycache__/
+.DS_Store
+*.pyc
+.cursor-plugin-cache/

@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": "./scripts/scan-for-pii.sh",
+        "description": "Scan files for exposed PII after editing"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "./scripts/validate-api-calls.sh",
+        "matcher": "curl|wget|http|fetch",
+        "description": "Validate API calls to ensure data is protected"
+      }
+    ],
+    "beforePromptSend": [
+      {
+        "command": "./scripts/sanitize-prompt.sh",
+        "description": "Scan and sanitize prompts before sending to AI models"
+      }
+    ],
+    "sessionEnd": [
+      {
+        "command": "./scripts/audit-session.sh",
+        "description": "Generate audit log of data protection operations"
+      }
+    ]
+  }
+}

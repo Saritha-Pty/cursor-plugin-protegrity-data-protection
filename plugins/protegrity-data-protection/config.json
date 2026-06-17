@@ -1,0 +1,37 @@
+{
+  "protegrity": {
+    "classification_endpoint": "http://localhost:8580/pty/data-discovery/v1.1/classify",
+    "semantic_guardrail_endpoint": "http://localhost:8581/pty/semantic-guardrail/v1.1/conversations/messages/scan",
+    "synthetic_data_endpoint": "http://localhost:8095/pty/synthetic-data/v1",
+    "classification_score_threshold": 0.6,
+    "enable_logging": true,
+    "log_level": "INFO",
+    "method": "redact",
+    "masking_char": "#",
+    "named_entity_map": {
+      "PERSON": "PERSON",
+      "LOCATION": "LOCATION",
+      "EMAIL_ADDRESS": "EMAIL",
+      "PHONE_NUMBER": "PHONE",
+      "SOCIAL_SECURITY_ID": "SSN",
+      "CREDIT_CARD_NUMBER": "CARD",
+      "AGE": "AGE",
+      "USERNAME": "USERNAME",
+      "IP_ADDRESS": "IP",
+      "ACCOUNT_NUMBER": "ACCOUNT",
+      "PASSPORT_NUMBER": "PASSPORT",
+      "DRIVER_LICENSE_NUMBER": "LICENSE"
+    },
+    "risk_thresholds": {
+      "block": 0.9,
+      "redact": 0.7,
+      "warn": 0.5,
+      "allow": 0.0
+    },
+    "audit": {
+      "enabled": true,
+      "log_directory": ".protegrity-logs",
+      "retention_days": 90
+    }
+  }
+}

@@ -1,0 +1,15 @@
+---
+description: Data protection and privacy standards for handling sensitive information in prompts and AI workflows
+alwaysApply: true
+---
+
+data-protection-standards:
+
+- Never expose personally identifiable information (PII) in prompts without protection or redaction.
+- Apply masking or tokenization to sensitive data before sending to external AI models.
+- Use Protegrity's semantic guardrails to evaluate conversation risk and PII exposure.
+- Document data sensitivity classifications in code comments.
+- Implement input validation and sanitization for user-provided data.
+- Configure appropriate protection methods based on data sensitivity level.
+- Keep audit logs of data protection operations.
+- Use synthetic data for testing and development to avoid exposing production data.

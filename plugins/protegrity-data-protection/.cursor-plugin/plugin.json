@@ -1,0 +1,24 @@
+{
+  "name": "protegrity-data-protection",
+  "displayName": "Protegrity Data Protection",
+  "version": "1.0.0",
+  "description": "Protect and unprotect sensitive data in prompts and AI workflows using Protegrity's enterprise-grade privacy APIs. Detect PII, apply masking/redaction, and enable tokenization-style protection.",
+  "author": {
+    "name": "Saritha-Pty",
+    "email": "saritha@protegrity.dev"
+  },
+  "license": "MIT",
+  "keywords": [
+    "privacy",
+    "pii-detection",
+    "data-protection",
+    "protegrity",
+    "security",
+    "masking",
+    "redaction",
+    "tokenization",
+    "semantic-guardrails",
+    "ai-safety"
+  ],
+  "logo": "assets/logo.svg"
+}

@@ -1,0 +1,21 @@
+---
+description: Checklist for privacy and security review of prompts, workflows, and data handling
+alwaysApply: false
+globs:
+  - "**/*.py"
+  - "**/*.js"
+  - "**/*.ts"
+  - "**/*.md"
+  - "**/*.txt"
+---
+
+privacy-review-checklist:
+
+- Confirm no unprotected PII is exposed in prompts or API calls.
+- Verify sensitive data uses appropriate protection method (mask, redact, or tokenize).
+- Check for hardcoded credentials or API keys; use environment variables instead.
+- Validate that semantic guardrails are applied to multi-turn conversations.
+- Ensure configuration specifies correct entity types for detection.
+- Confirm protection policies align with data classification levels.
+- Review audit logs for any failed protection operations.
+- Document data lineage and transformation pipelines.
