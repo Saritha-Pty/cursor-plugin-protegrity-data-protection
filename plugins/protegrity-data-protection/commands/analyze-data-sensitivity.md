@@ -7,6 +7,46 @@ description: Analyze selected text to identify sensitive data and recommend prot
 
 Get recommendations on how to protect your data.
 
+## Prerequisites Check
+
+Before using this command, ensure you have:
+
+✅ **Classification API** - REQUIRED
+- Option A: Docker running with `docker compose up -d classification-service` (local)
+- Option B: Cloud API access (automatic)
+
+✅ **Python 3.9+** - REQUIRED
+- Verify: `python3 --version`
+
+✅ **Entity Mappings** - RECOMMENDED
+- Check in config.json > named_entity_map
+- Contains entity types you want to detect (PERSON, EMAIL, PHONE, etc.)
+
+✅ **Configuration Threshold** - OPTIONAL
+- Default: 0.6 (sensitivity score threshold)
+- Adjust in: Settings → Protegrity → Classification Threshold
+
+⏱️ **Setup Time**: ~5 minutes
+
+### Quick Setup (First Time)
+```bash
+# If using Docker (recommended for first-time users):
+docker compose up -d classification-service
+docker compose logs classification-service  # Verify it's running
+
+# If using Cloud API:
+# No setup needed - just use the command
+```
+
+### Status Check
+Run this in Cursor Command Palette:
+```
+Protegrity: Status Check
+```
+Should show: ✅ Classification API: Connected
+
+---
+
 ## Steps
 
 1. Select text or provide data snippet.
@@ -44,3 +84,20 @@ Sensitivity Level: RESTRICTED (due to health data + PII)
 Recommended Protection: Tokenization + Encryption
 Compliance: HIPAA, GDPR, CCPA
 ```
+
+## Common Issues
+
+| Issue | Solution |
+|-------|----------|
+| ❌ "Cannot connect to Classification API" | Run: `docker compose up -d classification-service` |
+| ❌ "No entities detected" | Text may not contain detectable PII; try: "Contact John at john@example.com" |
+| ❌ "Service timeout" | Increase classification threshold in Settings (try 0.5 instead of 0.6) |
+
+## Full Prerequisites Guide
+
+📖 See [PREREQUISITES.md - Analyze Data Sensitivity](../PREREQUISITES.md#1-analyze-data-sensitivity-command) for:
+- Complete setup instructions
+- Docker vs Cloud API comparison
+- Verification steps
+- Advanced configuration
+- Troubleshooting details
