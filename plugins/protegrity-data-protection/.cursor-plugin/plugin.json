@@ -2,7 +2,8 @@
   "name": "protegrity-data-protection",
   "displayName": "Protegrity Data Protection",
   "version": "1.0.0",
-  "description": "Protect and unprotect sensitive data in prompts and AI workflows using Protegrity's enterprise-grade privacy APIs. Detect PII, apply masking/redaction, and enable tokenization-style protection.",
+  "description": "Enterprise-grade data protection for Cursor IDE. Detect PII, redact/mask sensitive data, and protect with tokenization. ⚠️ REQUIRES: Docker (PII discovery, redaction, guardrails) + API Credentials (protect/unprotect). Start with setup wizard after installation.",
+  "longDescription": "Comprehensive data protection suite using Protegrity AI Developer Edition APIs.\n\n**Two Setup Tracks:**\n\n🐳 **Local Services (Docker)** - Required for:\n  • PII Detection & Classification\n  • Data Redaction & Masking\n  • Semantic Guardrails (conversation risk)\n  • Synthetic Data Generation\n  Setup: git clone + docker compose up (5-15 min)\n\n🔑 **API Credentials** - Required for:\n  • Protect Text (tokenization)\n  • Unprotect Text (detokenization)\n  Setup: Register account + set 3 env vars (10 min)\n\n**Start Here:** Run \"Protegrity: Setup Wizard\" after installation to assess your requirements and gather prerequisites before diving in.",
   "author": {
     "name": "Saritha-Pty",
     "email": "saritha@protegrity.dev"
@@ -18,7 +19,18 @@
     "redaction",
     "tokenization",
     "semantic-guardrails",
-    "ai-safety"
+    "ai-safety",
+    "gdpr",
+    "data-governance"
   ],
-  "logo": "assets/logo.svg"
+  "logo": "assets/logo.svg",
+  "setupWizard": true,
+  "categories": [
+    "security",
+    "privacy",
+    "data-governance"
+  ],
+  "activationEvents": [
+    "*"
+  ]
 }
