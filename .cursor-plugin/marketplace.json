@@ -1,10 +1,26 @@
 {
   "name": "Protegrity Data Protection Plugin Suite",
   "owner": "Saritha-Pty",
-  "description": "Enterprise-grade data discovery, protection, and privacy controls for Cursor IDE using Protegrity AI Developer Edition APIs",
+  "description": "Enterprise-grade data protection for Cursor IDE using Protegrity APIs. ⚠️ SETUP REQUIRED: Docker for discovery/redaction + API credentials for protection. See setup guide before first use.",
+  "detailedDescription": "Comprehensive data discovery, protection, and privacy controls for Cursor IDE using Protegrity AI Developer Edition APIs.\n\n**Key Features:**\n• PII Detection & Classification (12+ entity types)\n• Data Masking & Redaction\n• Enterprise Tokenization (Protect/Unprotect)\n• Semantic Guardrails (conversation risk evaluation)\n• Synthetic Data Generation\n• Privacy & Compliance Auditing\n\n**⚠️ PREREQUISITES BY FEATURE:**\n\n**🐳 Docker + Docker Compose (Local Services)** - Setup: 5-15 minutes\nRequired for:\n  ✓ Analyze Data Sensitivity (PII detection)\n  ✓ Redact Sensitive Data\n  ✓ Scan Conversation Risk (guardrails)\n  ✓ Synthetic Data Generation\n  ✓ Privacy Reviewer Agent\n  ✓ Security Compliance Auditor\n\nSetup: `git clone https://github.com/Protegrity-Developer-Edition/protegrity-developer-edition.git && docker compose up -d`\n\n**🔑 API Credentials** - Setup: 10 minutes\nRequired for:\n  ✓ Protect Text (tokenization)\n  ✓ Unprotect Text (detokenization)\n\nSetup: Register at https://www.protegrity.com/developers/dev-edition-api, set 3 env vars\n\n**📋 NEXT STEPS:**\n1. Install plugin in Cursor Marketplace\n2. Run \"Protegrity: Setup Wizard\" command\n3. Wizard assesses your use case and guides you through gathering prerequisites\n4. Follow setup guides for Docker and/or API credentials as needed\n\nSee PREREQUISITES.md for detailed feature-by-feature requirements.",
   "version": "1.0.0",
   "repository": "https://github.com/Saritha-Pty/cursor-plugin-protegrity-data-protection",
   "plugins": [
     "plugins/protegrity-data-protection"
-  ]
+  ],
+  "keywords": [
+    "privacy",
+    "pii",
+    "data-protection",
+    "protegrity",
+    "gdpr",
+    "redaction",
+    "tokenization"
+  ],
+  "categories": [
+    "security",
+    "privacy"
+  ],
+  "setupComplexity": "medium",
+  "setupTime": "15-25 minutes"
 }
