@@ -166,7 +166,8 @@ async function anonymize(data, method = 'redact') {
 async function syntheticData(schema) {
   const url = process.env.PROTEGRITY_SYNTHETIC_DATA_ENDPOINT || cfg.synthetic_data_endpoint;
   if (!url) throw new Error('synthetic data endpoint not configured');
-  const resp = await fetch(`${url}/generate`, {
+  const normalizedUrl = url.replace(/\/+$/, '');
+  const resp = await fetch(`${normalizedUrl}/generate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ schema })

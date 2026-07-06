@@ -73,7 +73,7 @@ name,email,phone,age
 | Method | What it does | When to use |
 |--------|-------------|-------------|
 | `redact` | Replaces PII with `#####` | Compliance, sharing externally |
-| `mask` | Replaces with configurable char | Testing, staging data |
+| `mask` | Replaces with configurable char (`masking_char` in `config.json`, default `#`) | Testing, staging data |
 
 ## Common Issues
 

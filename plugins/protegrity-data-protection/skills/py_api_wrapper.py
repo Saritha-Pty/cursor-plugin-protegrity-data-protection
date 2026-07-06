@@ -153,7 +153,8 @@ def synthetic_data(schema):
             '  From the protegrity-ai-developer-edition directory, run: cd synthetic-data && docker compose up -d && cd ..\n'
             '  Or set PROTEGRITY_SYNTHETIC_DATA_ENDPOINT env var.'
         )
-    resp = requests.post(url + '/generate', json={'schema': schema})
+    normalized_url = url.rstrip('/')
+    resp = requests.post(f'{normalized_url}/generate', json={'schema': schema})
     resp.raise_for_status()
     return resp.json()
 
