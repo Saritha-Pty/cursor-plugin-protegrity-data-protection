@@ -18,7 +18,7 @@ Anonymization permanently removes identifying information from datasets. Unlike 
 ## Prerequisites Check
 
 ✅ **Docker + Docker Compose** — REQUIRED
-- Install: https://docs.docker.com/get-started/
+- Install: https://docs.docker.com/get-docker/
 - Verify: `docker --version && docker compose version`
 
 ✅ **Protegrity AI Developer Edition cloned** — REQUIRED

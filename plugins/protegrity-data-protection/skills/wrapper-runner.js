@@ -15,7 +15,14 @@ const wrapper = require(path.join(__dirname, 'api-wrapper'));
 async function main() {
   const args = process.argv.slice(2);
   if (args.length < 2) {
-    console.error('Usage: wrapper-runner.js <classify|classify-tabular|protect|unprotect|guardrail|anonymize|synthetic-data> <input> [policy_user|method] [data_element]');
+    console.error('Usage:');
+    console.error('  wrapper-runner.js classify <input>');
+    console.error('  wrapper-runner.js classify-tabular <input>');
+    console.error('  wrapper-runner.js protect <input> [policy_user] [data_element]');
+    console.error('  wrapper-runner.js unprotect <input> [policy_user] [data_element]');
+    console.error('  wrapper-runner.js guardrail <input>');
+    console.error('  wrapper-runner.js anonymize <input> [method]');
+    console.error('  wrapper-runner.js synthetic-data <input>');
     process.exit(2);
   }
   const cmd = args[0];

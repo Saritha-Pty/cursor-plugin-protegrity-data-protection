@@ -160,7 +160,14 @@ def synthetic_data(schema):
 
 def _cli():
     if len(sys.argv) < 3:
-        print('Usage: py_api_wrapper.py <classify|classify-tabular|protect|unprotect|guardrail|anonymize|synthetic-data> <input> [policy_user] [data_element]')
+        print('Usage:')
+        print('  py_api_wrapper.py classify <input>')
+        print('  py_api_wrapper.py classify-tabular <input>')
+        print('  py_api_wrapper.py protect <input> [policy_user] [data_element]')
+        print('  py_api_wrapper.py unprotect <input> [policy_user] [data_element]')
+        print('  py_api_wrapper.py guardrail <input>')
+        print('  py_api_wrapper.py anonymize <input> [method]')
+        print('  py_api_wrapper.py synthetic-data <input>')
         sys.exit(2)
 
     cmd = sys.argv[1]
