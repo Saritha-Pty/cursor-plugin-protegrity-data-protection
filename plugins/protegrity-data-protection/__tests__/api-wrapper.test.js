@@ -9,18 +9,19 @@ const { Response } = jest.requireActual('node-fetch');
 jest.mock('child_process');
 const { execFileSync } = require('child_process');
 
+const path = require('path');
+const WRAPPER_PATH = path.join(__dirname, '..', 'skills', 'api-wrapper');
+
 // Mock fs so config.json can be controlled per test
 jest.mock('fs');
 const fs = require('fs');
-
-const path = require('path');
 
 // Default: return a config with no endpoints so we control endpoint resolution
 // via env vars only. Individual tests can override this.
 fs.readFileSync.mockReturnValue(JSON.stringify({ protegrity: {} }));
 
 // Require the wrapper after mocks are in place
-const wrapper = require(path.join(__dirname, '..', 'skills', 'api-wrapper'));
+const wrapper = require(WRAPPER_PATH);
 
 beforeEach(() => {
   jest.clearAllMocks();
