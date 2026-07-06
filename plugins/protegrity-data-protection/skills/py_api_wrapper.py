@@ -2,8 +2,9 @@
 """Python wrapper for Protegrity plugin operations.
 
 - classify/guardrail use local REST endpoints from config or env.
-- protect uses official Protegrity AI Developer Edition SDK (PyPI package:
-  protegrity-ai-developer-python, import name: appython) and DEV_EDITION_* env vars.
+- protect/unprotect use the official Protegrity AI Developer Edition SDK
+  (PyPI package: protegrity-ai-developer-python, import name: appython)
+  and DEV_EDITION_* env vars.
 """
 
 import os
@@ -58,90 +59,56 @@ def _extract_sdk_token(result):
     return {'raw': result}
 
 
-def protect(data, policy_user='superuser', data_element='name'):
-    """Protect sensitive data using official appython SDK and DEV_EDITION_* env vars."""
-    email = os.environ.get('DEV_EDITION_EMAIL')
-    password = os.environ.get('DEV_EDITION_PASSWORD')
-    api_key = os.environ.get('DEV_EDITION_API_KEY')
+# ---------------------------------------------------------------------------
+# Problem 1 fix: helpers that use the real SDK API — Protector().create_session()
+# Problem 2 fix: no blanket except/pass — real errors are surfaced
+# Optional: TLS-aware error message for known Protegrity Dev Edition issue
+# ---------------------------------------------------------------------------
 
-    if not email or not password or not api_key:
-        raise RuntimeError('Missing required environment variables: DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD, DEV_EDITION_API_KEY')
+def _require_dev_edition_env():
+    missing = [v for v in ('DEV_EDITION_EMAIL', 'DEV_EDITION_PASSWORD', 'DEV_EDITION_API_KEY')
+               if not os.environ.get(v)]
+    if missing:
+        raise RuntimeError('Missing required environment variables: ' + ', '.join(missing))
 
+
+def _get_session(policy_user):
+    """Authenticate with the appython SDK and return a session for the given user."""
+    _require_dev_edition_env()
     try:
-        import appython
+        from appython import Protector
     except ImportError:
-        raise RuntimeError('Missing dependency: protegrity-ai-developer-python (import appython). Install with: pip install protegrity-ai-developer-python')
+        raise RuntimeError(
+            'Missing dependency: protegrity-ai-developer-python (import appython). '
+            'Install with: pip install protegrity-ai-developer-python'
+        )
+    try:
+        return Protector().create_session(policy_user)
+    except Exception as exc:
+        # Optional TLS-aware error message (Problem 1 optional fix)
+        msg = str(exc)
+        if 'ssl' in msg.lower() or 'certificate' in msg.lower() or 'tls' in msg.lower():
+            raise RuntimeError(
+                'Auth endpoint TLS cert mismatch — likely a Protegrity Dev Edition server '
+                'misconfiguration. Check with Protegrity support.\nOriginal error: ' + msg
+            ) from exc
+        raise
 
-    # Try common client entrypoints/method names to stay compatible with SDK revisions.
-    candidates = []
 
-    if hasattr(appython, 'Client'):
-        try:
-            candidates.append(appython.Client(email=email, password=password, api_key=api_key))
-        except Exception:
-            pass
-    if hasattr(appython, 'AppythonClient'):
-        try:
-            candidates.append(appython.AppythonClient(email=email, password=password, api_key=api_key))
-        except Exception:
-            pass
+def protect(data, policy_user='superuser', data_element='name'):
+    """Protect data via the official appython SDK: Protector -> session -> protect."""
+    session = _get_session(policy_user)
+    return _extract_sdk_token(session.protect(data, data_element))
 
-    # Module-level fallback calls
-    module_level_methods = [
-        'protect',
-        'protect_data',
-        'tokenize',
-        'tokenize_data',
-    ]
 
-    method_names = [
-        'protect',
-        'protect_data',
-        'tokenize',
-        'tokenize_data',
-    ]
+# ---------------------------------------------------------------------------
+# Problem 3 fix: add unprotect function (was missing, causing broken CLI command)
+# ---------------------------------------------------------------------------
 
-    kwargs = {
-        'input_data': data,
-        'policy_user': policy_user,
-        'data_element': data_element,
-    }
-
-    # 1) Try object methods on discovered clients
-    for client in candidates:
-        for method_name in method_names:
-            method = getattr(client, method_name, None)
-            if callable(method):
-                try:
-                    result = method(**kwargs)
-                    return _extract_sdk_token(result)
-                except TypeError:
-                    # Some SDK versions may use positional params
-                    try:
-                        result = method(data, policy_user, data_element)
-                        return _extract_sdk_token(result)
-                    except Exception:
-                        pass
-                except Exception:
-                    pass
-
-    # 2) Try module-level methods
-    for method_name in module_level_methods:
-        method = getattr(appython, method_name, None)
-        if callable(method):
-            try:
-                result = method(**kwargs)
-                return _extract_sdk_token(result)
-            except TypeError:
-                try:
-                    result = method(data, policy_user, data_element)
-                    return _extract_sdk_token(result)
-                except Exception:
-                    pass
-            except Exception:
-                pass
-
-    raise RuntimeError('Unable to invoke protect via appython SDK. Verify installed SDK version and method names.')
+def unprotect(data, policy_user='superuser', data_element='name'):
+    """Reverse a protected token back to the original value."""
+    session = _get_session(policy_user)
+    return {'unprotected': session.unprotect(data, data_element)}
 
 
 def guardrail(messages):
@@ -155,7 +122,7 @@ def guardrail(messages):
 
 def _cli():
     if len(sys.argv) < 3:
-        print('Usage: py_api_wrapper.py <classify|protect|guardrail> <input> [policy_user] [data_element]')
+        print('Usage: py_api_wrapper.py <classify|protect|unprotect|guardrail> <input> [policy_user] [data_element]')
         sys.exit(2)
 
     cmd = sys.argv[1]
@@ -168,6 +135,10 @@ def _cli():
         print(json.dumps(out, indent=2))
     elif cmd == 'protect':
         out = protect(inp, policy_user, data_element)
+        print(json.dumps(out, indent=2))
+    elif cmd == 'unprotect':
+        # Problem 3 fix: wire unprotect into CLI dispatch
+        out = unprotect(inp, policy_user, data_element)
         print(json.dumps(out, indent=2))
     elif cmd == 'guardrail':
         try:
