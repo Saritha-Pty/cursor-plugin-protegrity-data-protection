@@ -25,9 +25,11 @@ async function main() {
       const res = await wrapper.classify(input);
       console.log(JSON.stringify(res, null, 2));
     } else if (cmd === 'protect') {
+      // protect() is synchronous (delegates to execFileSync Python subprocess)
       const res = wrapper.protect(input, policyUser, dataElement);
       console.log(JSON.stringify(res, null, 2));
     } else if (cmd === 'unprotect') {
+      // unprotect() is synchronous (delegates to execFileSync Python subprocess)
       const res = wrapper.unprotect(input, policyUser, dataElement);
       console.log(JSON.stringify(res, null, 2));
     } else if (cmd === 'guardrail') {
