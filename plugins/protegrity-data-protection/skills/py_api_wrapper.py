@@ -48,6 +48,16 @@ def classify(text):
     return resp.json()
 
 
+def classify_tabular(csv_text):
+    """Classify sensitive data in tabular/CSV content."""
+    url = classification_endpoint()
+    if not url:
+        raise RuntimeError('classification endpoint not configured')
+    resp = requests.post(url, json={'data': csv_text, 'format': 'tabular'})
+    resp.raise_for_status()
+    return resp.json()
+
+
 def _extract_sdk_token(result):
     if isinstance(result, dict):
         for key in ('protected_token', 'token', 'protected_data', 'value', 'result'):
@@ -120,9 +130,37 @@ def guardrail(messages):
     return resp.json()
 
 
+def anonymize(data, method='redact'):
+    """Anonymize sensitive fields in data using the local Anonymization API."""
+    url = os.environ.get('PROTEGRITY_ANONYMIZATION_ENDPOINT') or CFG.get('anonymization_endpoint')
+    if not url:
+        raise RuntimeError(
+            'Anonymization endpoint not configured.\n'
+            '  Start the service: cd anonymization && docker compose up -d && cd ..\n'
+            '  Or set PROTEGRITY_ANONYMIZATION_ENDPOINT env var.'
+        )
+    resp = requests.post(url, json={'data': data, 'method': method})
+    resp.raise_for_status()
+    return resp.json()
+
+
+def synthetic_data(schema):
+    """Generate synthetic data from a schema using the local Synthetic Data API."""
+    url = os.environ.get('PROTEGRITY_SYNTHETIC_DATA_ENDPOINT') or CFG.get('synthetic_data_endpoint')
+    if not url:
+        raise RuntimeError(
+            'Synthetic Data endpoint not configured.\n'
+            '  Start the service: cd synthetic-data && docker compose up -d && cd ..\n'
+            '  Or set PROTEGRITY_SYNTHETIC_DATA_ENDPOINT env var.'
+        )
+    resp = requests.post(url + '/generate', json={'schema': schema})
+    resp.raise_for_status()
+    return resp.json()
+
+
 def _cli():
     if len(sys.argv) < 3:
-        print('Usage: py_api_wrapper.py <classify|protect|unprotect|guardrail> <input> [policy_user] [data_element]')
+        print('Usage: py_api_wrapper.py <classify|classify-tabular|protect|unprotect|guardrail|anonymize|synthetic-data> <input> [policy_user] [data_element]')
         sys.exit(2)
 
     cmd = sys.argv[1]
@@ -132,6 +170,9 @@ def _cli():
 
     if cmd == 'classify':
         out = classify(inp)
+        print(json.dumps(out, indent=2))
+    elif cmd == 'classify-tabular':
+        out = classify_tabular(inp)
         print(json.dumps(out, indent=2))
     elif cmd == 'protect':
         out = protect(inp, policy_user, data_element)
@@ -146,6 +187,17 @@ def _cli():
         except Exception:
             messages = [{'role': 'user', 'content': inp}]
         out = guardrail(messages)
+        print(json.dumps(out, indent=2))
+    elif cmd == 'anonymize':
+        method = sys.argv[3] if len(sys.argv) > 3 else 'redact'
+        out = anonymize(inp, method)
+        print(json.dumps(out, indent=2))
+    elif cmd == 'synthetic-data':
+        try:
+            schema = json.loads(inp)
+        except Exception:
+            schema = {'fields': [{'name': inp, 'type': 'string'}]}
+        out = synthetic_data(schema)
         print(json.dumps(out, indent=2))
     else:
         print('Unknown command', cmd)

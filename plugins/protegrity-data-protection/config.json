@@ -1,8 +1,9 @@
 {
   "protegrity": {
-    "classification_endpoint": "http://localhost:8580/pty/data-discovery/v1.1/classify",
+    "classification_endpoint": "http://localhost:8580/pty/data-discovery/v2.0/classify",
     "semantic_guardrail_endpoint": "http://localhost:8581/pty/semantic-guardrail/v1.1/conversations/messages/scan",
-    "synthetic_data_endpoint": "http://localhost:8095/pty/synthetic-data/v1",
+    "synthetic_data_endpoint": "http://localhost:8095/pty/syntheticdata/v2",
+    "anonymization_endpoint": "http://localhost:8085/pty/anonymization/v3",
     "classification_score_threshold": 0.6,
     "enable_logging": true,
     "log_level": "INFO",

@@ -79,6 +79,66 @@ async function protect(data, policyUser = 'superuser', dataElement = 'name') {
   });
 }
 
+async function unprotect(data, policyUser = 'superuser', dataElement = 'name') {
+  const email = process.env.DEV_EDITION_EMAIL;
+  const password = process.env.DEV_EDITION_PASSWORD;
+  const apiKey = process.env.DEV_EDITION_API_KEY;
+
+  if (!email || !password || !apiKey) {
+    throw new Error('Missing required environment variables: DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD, DEV_EDITION_API_KEY');
+  }
+
+  const pyWrapperPath = path.join(__dirname, 'py_api_wrapper.py');
+
+  return new Promise((resolve, reject) => {
+    const child = spawn('python3', [pyWrapperPath, 'unprotect', String(data), String(policyUser), String(dataElement)], {
+      env: process.env
+    });
+
+    let stdout = '';
+    let stderr = '';
+
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk.toString();
+    });
+
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk.toString();
+    });
+
+    child.on('error', (err) => {
+      reject(new Error(`failed to start Python wrapper: ${err.message}`));
+    });
+
+    child.on('close', (code) => {
+      if (code !== 0) {
+        const detail = (stderr || stdout || '').trim();
+        reject(new Error(`unprotect call failed (exit ${code})${detail ? ` - ${detail}` : ''}`));
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(stdout);
+        resolve(parsed);
+      } catch (e) {
+        reject(new Error(`failed to parse unprotect response: ${e.message}`));
+      }
+    });
+  });
+}
+
+async function classifyTabular(csvText) {
+  const url = process.env.PROTEGRITY_CLASSIFICATION_ENDPOINT || cfg.classification_endpoint;
+  if (!url) throw new Error('classification endpoint not configured');
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ data: csvText, format: 'tabular' })
+  });
+  if (!resp.ok) throw new Error(`tabular classification call failed: ${resp.status}`);
+  return resp.json();
+}
+
 async function guardrailScan(messages) {
   const url = process.env.PROTEGRITY_GUARDRAIL_ENDPOINT || cfg.semantic_guardrail_endpoint;
   if (!url) throw new Error('semantic guardrail endpoint not configured');
@@ -91,4 +151,36 @@ async function guardrailScan(messages) {
   return resp.json();
 }
 
-module.exports = { classify, protect, guardrailScan };
+async function anonymize(data, method = 'redact') {
+  const url = process.env.PROTEGRITY_ANONYMIZATION_ENDPOINT || cfg.anonymization_endpoint;
+  if (!url) throw new Error('anonymization endpoint not configured');
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ data, method })
+  });
+  if (!resp.ok) throw new Error(`anonymization call failed: ${resp.status}`);
+  return resp.json();
+}
+
+async function syntheticData(schema) {
+  const url = process.env.PROTEGRITY_SYNTHETIC_DATA_ENDPOINT || cfg.synthetic_data_endpoint;
+  if (!url) throw new Error('synthetic data endpoint not configured');
+  const resp = await fetch(`${url}/generate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ schema })
+  });
+  if (!resp.ok) throw new Error(`synthetic data call failed: ${resp.status}`);
+  return resp.json();
+}
+
+module.exports = {
+  classify,
+  classifyTabular,
+  protect,
+  unprotect,
+  guardrailScan,
+  anonymize,
+  syntheticData
+};
