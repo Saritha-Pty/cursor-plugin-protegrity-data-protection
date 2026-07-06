@@ -67,7 +67,7 @@ python3 --version  # Should show 3.9+
 - ✅ **Environment variables set** (DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD, DEV_EDITION_API_KEY)
 - ✅ Network access to Protegrity cloud APIs
 - ✅ Python 3.9+
-- ✅ `protection_endpoint` in config.json ✅ **Already configured**
+- ✅ `protegrity-ai-developer-python` SDK installed: `pip install protegrity-ai-developer-python`
 
 **What It Does:**
 Converts sensitive text into secure tokens using Protegrity's tokenization APIs.
@@ -134,7 +134,7 @@ Data Element: name
 | ❌ "401 Unauthorized" | Check credentials at https://www.protegrity.com/developers/dev-edition-api |
 | ❌ "Connection refused" | Check internet connection and firewall |
 | ❌ "Policy user not recognized" | Use: `superuser` or contact Protegrity admin |
-| ❌ "protection endpoint not configured" | Run `/config-check` or verify config.json has `protection_endpoint` |
+| ❌ "protection endpoint not configured" | No longer applicable — protection uses the appython SDK, not a localhost endpoint |
 
 ---
 
@@ -147,12 +147,15 @@ Default endpoints (can be overridden with environment variables):
 {
   "protegrity": {
     "classification_endpoint": "http://localhost:8580/pty/data-discovery/v1.1/classify",
-    "protection_endpoint": "http://localhost:8090/pty/data-protection/v1/protect",
     "semantic_guardrail_endpoint": "http://localhost:8581/pty/semantic-guardrail/v1.1/conversations/messages/scan",
     "synthetic_data_endpoint": "http://localhost:8095/pty/synthetic-data/v1"
   }
 }
 ```
+
+> **Note:** Protect/unprotect (tokenization) uses the `appython` SDK
+> (`pip install protegrity-ai-developer-python`) and **does not** use a localhost
+> endpoint. Credentials are supplied via the `DEV_EDITION_*` environment variables.
 
 ---
 

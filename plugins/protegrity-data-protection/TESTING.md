@@ -16,7 +16,7 @@ Before running tests, ensure:
    export DEV_EDITION_API_KEY='your-api-key'
    ```
 5. **Python 3.12+** installed for agentic workflows
-6. **MCP servers configured** for Protegrity integration
+6. **`protegrity-ai-developer-python`** SDK installed for protect/unprotect (`pip install protegrity-ai-developer-python`)
 
 ---
 

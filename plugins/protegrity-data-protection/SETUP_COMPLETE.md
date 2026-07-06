@@ -1,115 +1,95 @@
-# Setup Complete ✅ - Protect-Text Command Ready
+# Setup Complete ✅ - Protect-Text / Unprotect-Text Commands Ready
 
 ## Summary of Changes
 
-All necessary configurations have been implemented to enable the `/protect-text` command in Cursor IDE.
+All necessary configurations have been implemented to enable `/protect-text` and
+`/unprotect-text` in Cursor IDE using the official `appython` SDK.
 
 ---
 
 ## 🔧 What Was Added/Modified
 
-### 1. **config.json** - Added Protection Endpoint
-```json
-"protection_endpoint": "http://localhost:8090/pty/data-protection/v1/protect"
-```
-**File:** `plugins/protegrity-data-protection/config.json`
+### 1. **config.json** - Removed Invalid Protection Endpoint
+`protection_endpoint` (localhost:8090) has been **removed**.  
+Protection now uses the `appython` SDK whose hosted URL is internal to the package.
+Classification (`:8580`) and guardrail (`:8581`) Docker endpoints remain unchanged.
 
 ---
 
-### 2. **api-wrapper.js** - Added protect() Function
-New function signature:
-```javascript
-async function protect(data, policyUser = 'superuser', dataElement = 'name')
-```
-**File:** `plugins/protegrity-data-protection/skills/api-wrapper.js`
-
-**Features:**
-- Validates environment variables (DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD, DEV_EDITION_API_KEY)
-- Calls Protegrity protection API
-- Returns protected token response
-
----
-
-### 3. **py_api_wrapper.py** - Added protect() Function
-New function signature:
+### 2. **py_api_wrapper.py** - SDK-Based protect() / unprotect()
+Functions now call the `appython` SDK instead of a REST endpoint:
 ```python
-def protect(data, policy_user='superuser', data_element='name')
+def protect(input_data, policy_user='superuser', data_element='name')
+def unprotect(input_data, policy_user='superuser', data_element='name')
 ```
 **File:** `plugins/protegrity-data-protection/skills/py_api_wrapper.py`
 
-**Features:**
-- Validates environment variables
-- Supports CLI usage: `python3 py_api_wrapper.py protect "text" "user" "element"`
-- Returns protected token response
+CLI usage:
+```bash
+python3 py_api_wrapper.py protect --input_data "John Smith" --policy_user superuser --data_element name
+python3 py_api_wrapper.py unprotect --input_data "<token>" --policy_user superuser --data_element name
+```
 
 ---
 
-### 4. **wrapper-runner.js** - Added protect Command Support
-Updated to handle:
+### 3. **api-wrapper.js** - Delegates to Python Subprocess
+protect() and unprotect() now spawn `python3 py_api_wrapper.py` so the appython SDK
+is always invoked via Python:
+```javascript
+protect(data, policyUser, dataElement)
+unprotect(token, policyUser, dataElement)
+```
+**File:** `plugins/protegrity-data-protection/skills/api-wrapper.js`
+
+---
+
+### 4. **wrapper-runner.js** - Added unprotect Command
 ```bash
-node wrapper-runner.js protect "text to protect" "superuser" "name"
+node wrapper-runner.js protect "John Smith" "superuser" "name"
+node wrapper-runner.js unprotect "<token>" "superuser" "name"
 ```
 **File:** `plugins/protegrity-data-protection/skills/wrapper-runner.js`
 
 ---
 
-### 5. **PREREQUISITES.md** - Complete Setup Instructions
-Added comprehensive guide including:
-- Environment variable setup for all OS (Linux, macOS, Windows)
-- Per-command prerequisites
-- Troubleshooting table
-- Quick checklist
-
-**File:** `plugins/protegrity-data-protection/PREREQUISITES.md`
+### 5. **PREREQUISITES.md** - Updated Setup Instructions
+Removed localhost:8090 references; added SDK installation step.
 
 ---
 
-### 6. **ENV_SETUP.md** - Quick Setup Reference (NEW)
-Quick 5-minute setup guide with:
-- API credential registration link
-- Environment variable examples
-- Verification steps
-- Troubleshooting
-
-**File:** `plugins/protegrity-data-protection/ENV_SETUP.md`
-
----
-
-### 7. **.env.example** - Environment Template (NEW)
-Template file showing all required environment variables:
-```bash
-DEV_EDITION_EMAIL=your-email@company.com
-DEV_EDITION_PASSWORD=your-secure-password
-DEV_EDITION_API_KEY=your-api-key-here
-```
-**File:** `plugins/protegrity-data-protection/.env.example`
+### 6. **.env.example** - Cleaned Up
+Removed the invalid `PROTEGRITY_PROTECTION_ENDPOINT` variable.
 
 ---
 
 ## 🚀 How to Use
 
-### Step 1: Set Environment Variables
+### Step 1: Install the SDK
+```bash
+pip install protegrity-ai-developer-python
+```
+
+### Step 2: Set Environment Variables
 ```bash
 export DEV_EDITION_EMAIL='your-email@company.com'
 export DEV_EDITION_PASSWORD='your-password'
 export DEV_EDITION_API_KEY='your-api-key'
 ```
 
-### Step 2: Restart Cursor IDE
+### Step 3: Restart Cursor IDE
 Close and reopen Cursor completely.
 
-### Step 3: Run the Command
+### Step 4: Run the Command
 In Cursor Command Palette:
 ```
 /protect-text John Smith
 ```
 
-### Step 4: Provide Parameters
+### Step 5: Provide Parameters
 - **Policy User** (default: `superuser`)
 - **Data Element Type** (default: `name`)
 
-### Step 5: Get Protected Token
-Example output:
+### Step 6: Get Protected Token
 ```json
 {
   "protected_token": "xyz123abc456",
@@ -131,74 +111,33 @@ Example output:
 
 ---
 
-## ✨ Data Element Types Supported
-
-- `name` - Person names
-- `email` - Email addresses
-- `phone` - Phone numbers
-- `ssn` - Social security numbers
-- `credit_card` - Credit card numbers
-- `address` - Addresses
-- Custom types - Define your own
-
----
-
-## 🔍 Verification
-
-Run in Cursor Command Palette:
-```
-Protegrity: Status Check
-```
-
-Expected output:
-```
-✅ Protection API: Connected
-```
-
----
-
-## 📚 Documentation Files
-
-| File | Purpose |
-|------|---------|
-| `PREREQUISITES.md` | Complete setup guide for all commands |
-| `ENV_SETUP.md` | Quick 5-minute environment setup |
-| `.env.example` | Environment variables template |
-| `config.json` | API endpoints configuration |
-| `protect-text.md` | Protect-text command documentation |
-
----
-
 ## 🆘 Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
 | "Environment variable not set" | Set env vars, restart Cursor |
 | "401 Unauthorized" | Verify credentials at Protegrity Dev Edition |
-| "protection endpoint not configured" | Reload Cursor - already configured in config.json |
+| "Missing dependency: protegrity-ai-developer-python" | Run: `pip install protegrity-ai-developer-python` |
 | "Connection refused" | Check internet & firewall |
 
 ---
 
 ## ✅ Checklist
 
-- [x] `protection_endpoint` added to config.json
-- [x] `protect()` function added to api-wrapper.js
-- [x] `protect()` function added to py_api_wrapper.py
-- [x] wrapper-runner.js updated with protect command
-- [x] PREREQUISITES.md updated with setup instructions
-- [x] Environment variables documentation created
-- [x] .env.example template created
+- [x] `protection_endpoint` (localhost:8090) removed from config.json
+- [x] `protect()` / `unprotect()` use appython SDK in py_api_wrapper.py
+- [x] api-wrapper.js delegates to Python subprocess
+- [x] wrapper-runner.js updated with protect and unprotect commands
+- [x] PREREQUISITES.md updated with SDK installation step
+- [x] .env.example cleaned up (removed invalid PROTEGRITY_PROTECTION_ENDPOINT)
 
 ---
 
 ## 🎉 Status: READY TO USE
 
-Your Cursor IDE is now fully configured to execute the `/protect-text` command smoothly!
-
-**Next Step:** Follow the setup guide in `ENV_SETUP.md` to set your environment variables.
+**Next Step:** `pip install protegrity-ai-developer-python`, set `DEV_EDITION_*` env vars, restart Cursor.
 
 ---
 
-*Configuration completed on: 2026-07-02*
+*Configuration completed on: 2026-07-06*
 *Repository: Saritha-Pty/cursor-plugin-protegrity-data-protection*

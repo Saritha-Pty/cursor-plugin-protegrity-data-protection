@@ -1,20 +1,26 @@
 #!/usr/bin/env python3
-"""Minimal Python wrapper to call Protegrity HTTP endpoints.
-Reads endpoints from plugins/protegrity-data-protection/config.json (relative path)
-or from environment variables:
-  PROTEGRITY_CLASSIFICATION_ENDPOINT
-  PROTEGRITY_PROTECTION_ENDPOINT
-  PROTEGRITY_GUARDRAIL_ENDPOINT
+"""Python wrapper to call Protegrity APIs.
+
+- Classification (PII detection): calls the local Docker service at
+  http://localhost:8580 (or PROTEGRITY_CLASSIFICATION_ENDPOINT).
+- Protect / Unprotect (tokenization): uses the official appython SDK
+  (pip install protegrity-ai-developer-python).  Credentials are read
+  from environment variables DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD,
+  DEV_EDITION_API_KEY.  No localhost endpoint is involved.
+- Guardrail (conversation risk): calls the local Docker service at
+  http://localhost:8581 (or PROTEGRITY_GUARDRAIL_ENDPOINT).
 
 Usage:
   python3 py_api_wrapper.py classify "text to classify"
-  python3 py_api_wrapper.py protect "text to protect" "superuser" "name"
+  python3 py_api_wrapper.py protect --input_data "John Smith" --policy_user superuser --data_element name
+  python3 py_api_wrapper.py unprotect --input_data "<token>" --policy_user superuser --data_element name
   python3 py_api_wrapper.py guardrail '[{"role":"user","content":"..."}]'
 
-Note: This module uses the 'requests' library. Install with:
-  pip install requests
+Dependencies:
+  pip install requests protegrity-ai-developer-python
 """
 
+import argparse
 import os
 import sys
 import json
@@ -40,9 +46,6 @@ CFG = load_config()
 def classification_endpoint():
     return os.environ.get('PROTEGRITY_CLASSIFICATION_ENDPOINT') or CFG.get('classification_endpoint')
 
-def protection_endpoint():
-    return os.environ.get('PROTEGRITY_PROTECTION_ENDPOINT') or CFG.get('protection_endpoint')
-
 def guardrail_endpoint():
     return os.environ.get('PROTEGRITY_GUARDRAIL_ENDPOINT') or CFG.get('semantic_guardrail_endpoint')
 
@@ -54,43 +57,65 @@ def classify(text):
     resp.raise_for_status()
     return resp.json()
 
-def protect(data, policy_user='superuser', data_element='name'):
-    """Protect sensitive data using Protegrity tokenization.
-    
-    Args:
-        data: The text/data to protect
-        policy_user: Policy user (default: 'superuser')
-        data_element: Data element type (default: 'name')
-    
-    Returns:
-        Protected token response from API
-    
-    Raises:
-        RuntimeError: If endpoint not configured or auth credentials missing
-    """
-    url = protection_endpoint()
-    if not url:
-        raise RuntimeError('protection endpoint not configured')
-    
+def _get_sdk_client():
+    """Instantiate the appython SDK client using DEV_EDITION_* env vars."""
+    try:
+        from appython import Protegrity  # protegrity-ai-developer-python
+    except ImportError:
+        raise RuntimeError(
+            'Missing dependency: protegrity-ai-developer-python. '
+            'Install with: pip install protegrity-ai-developer-python'
+        )
+
     email = os.environ.get('DEV_EDITION_EMAIL')
     password = os.environ.get('DEV_EDITION_PASSWORD')
     api_key = os.environ.get('DEV_EDITION_API_KEY')
-    
+
     if not email or not password or not api_key:
-        raise RuntimeError('Missing required environment variables: DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD, DEV_EDITION_API_KEY')
-    
-    payload = {
-        'data': data,
-        'policy_user': policy_user,
-        'data_element': data_element,
-        'email': email,
-        'password': password,
-        'api_key': api_key
-    }
-    
-    resp = requests.post(url, json=payload)
-    resp.raise_for_status()
-    return resp.json()
+        raise RuntimeError(
+            'Missing required environment variables: '
+            'DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD, DEV_EDITION_API_KEY'
+        )
+
+    init_kwargs = dict(email=email, api_key=api_key)
+    init_kwargs['password'] = password
+    return Protegrity(**init_kwargs)
+
+def protect(input_data, policy_user='superuser', data_element='name'):
+    """Protect sensitive data using the appython SDK (tokenization).
+
+    Args:
+        input_data: The text/data to protect.
+        policy_user: Policy user (default: 'superuser').
+        data_element: Data element type (default: 'name').
+
+    Returns:
+        dict with the protected token returned by the SDK.
+    """
+    client = _get_sdk_client()
+    return client.protect(
+        input_data=input_data,
+        policy_user=policy_user,
+        data_element=data_element,
+    )
+
+def unprotect(input_data, policy_user='superuser', data_element='name'):
+    """Unprotect a token back to the original value using the appython SDK.
+
+    Args:
+        input_data: The protected token to reverse.
+        policy_user: Policy user used when the token was created.
+        data_element: Data element type used when the token was created.
+
+    Returns:
+        dict with the original (unprotected) value returned by the SDK.
+    """
+    client = _get_sdk_client()
+    return client.unprotect(
+        input_data=input_data,
+        policy_user=policy_user,
+        data_element=data_element,
+    )
 
 def guardrail(messages):
     url = guardrail_endpoint()
@@ -101,29 +126,49 @@ def guardrail(messages):
     return resp.json()
 
 def _cli():
-    if len(sys.argv) < 3:
-        print('Usage: py_api_wrapper.py <classify|protect|guardrail> <input> [policy_user] [data_element]')
+    if len(sys.argv) < 2:
+        print(
+            'Usage: py_api_wrapper.py <classify|protect|unprotect|guardrail> ...\n'
+            '  classify   <text>\n'
+            '  protect    --input_data <text> [--policy_user <user>] [--data_element <elem>]\n'
+            '  unprotect  --input_data <token> [--policy_user <user>] [--data_element <elem>]\n'
+            '  guardrail  <json-messages-or-plain-text>'
+        )
         sys.exit(2)
+
     cmd = sys.argv[1]
-    inp = sys.argv[2]
-    policy_user = sys.argv[3] if len(sys.argv) > 3 else 'superuser'
-    data_element = sys.argv[4] if len(sys.argv) > 4 else 'name'
-    
+
     if cmd == 'classify':
-        out = classify(inp)
+        if len(sys.argv) < 3:
+            print('Usage: py_api_wrapper.py classify <text>', file=sys.stderr)
+            sys.exit(2)
+        out = classify(sys.argv[2])
         print(json.dumps(out, indent=2))
-    elif cmd == 'protect':
-        out = protect(inp, policy_user, data_element)
+
+    elif cmd in ('protect', 'unprotect'):
+        parser = argparse.ArgumentParser(prog=f'py_api_wrapper.py {cmd}')
+        parser.add_argument('--input_data', required=True, help='Data to protect/unprotect')
+        parser.add_argument('--policy_user', default='superuser', help='Policy user (default: superuser)')
+        parser.add_argument('--data_element', default='name', help='Data element type (default: name)')
+        args = parser.parse_args(sys.argv[2:])
+        fn = protect if cmd == 'protect' else unprotect
+        out = fn(args.input_data, args.policy_user, args.data_element)
         print(json.dumps(out, indent=2))
+
     elif cmd == 'guardrail':
+        if len(sys.argv) < 3:
+            print('Usage: py_api_wrapper.py guardrail <json-or-text>', file=sys.stderr)
+            sys.exit(2)
+        inp = sys.argv[2]
         try:
             messages = json.loads(inp)
         except Exception:
             messages = [{'role': 'user', 'content': inp}]
         out = guardrail(messages)
         print(json.dumps(out, indent=2))
+
     else:
-        print('Unknown command', cmd)
+        print(f'Unknown command: {cmd}', file=sys.stderr)
         sys.exit(2)
 
 if __name__ == '__main__':

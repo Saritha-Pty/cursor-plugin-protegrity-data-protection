@@ -86,7 +86,6 @@ Select text → Choose redaction method (remove/mask) → Apply changes
 │   │   ├── validate-api-calls.sh
 │   │   ├── sanitize-prompt.sh
 │   │   └── audit-session.sh
-│   ├── mcp.json                        # MCP server config
 │   ├── config.json                     # Plugin configuration
 │   ├── SETUP.md                        # Installation & setup
 │   └── .cursor-plugin/plugin.json      # Plugin metadata

@@ -39,34 +39,39 @@ In Cursor Command Palette:
 All necessary changes have been made to your repository:
 
 ### 1. **config.json** ✓
-Added `protection_endpoint`:
-```json
-"protection_endpoint": "http://localhost:8090/pty/data-protection/v1/protect"
-```
+`protection_endpoint` (localhost:8090) removed — protection now uses the `appython` SDK directly. Classification (`:8580`) and guardrail (`:8581`) Docker endpoints remain.
 
-### 2. **JavaScript Wrapper** ✓
-`skills/api-wrapper.js` now includes:
-```javascript
-async function protect(data, policyUser = 'superuser', dataElement = 'name')
-```
-
-### 3. **Python Wrapper** ✓
-`skills/py_api_wrapper.py` now includes:
+### 2. **Python Wrapper** ✓
+`skills/py_api_wrapper.py` now calls the `appython` SDK:
 ```python
-def protect(data, policy_user='superuser', data_element='name')
+def protect(input_data, policy_user='superuser', data_element='name')
+def unprotect(input_data, policy_user='superuser', data_element='name')
+```
+
+CLI usage:
+```bash
+python3 py_api_wrapper.py protect --input_data "John Smith" --policy_user superuser --data_element name
+```
+
+### 3. **JavaScript Wrapper** ✓
+`skills/api-wrapper.js` delegates protect/unprotect to the Python wrapper (SDK subprocess):
+```javascript
+protect(data, policyUser, dataElement)
+unprotect(token, policyUser, dataElement)
 ```
 
 ### 4. **Wrapper Runner** ✓
-`skills/wrapper-runner.js` updated with protect command support:
+`skills/wrapper-runner.js` updated with protect and unprotect command support:
 ```bash
 node wrapper-runner.js protect "John Smith" "superuser" "name"
+node wrapper-runner.js unprotect "<token>" "superuser" "name"
 ```
 
 ### 5. **Environment Template** ✓
-Created `.env.example` with all required variables.
+Updated `.env.example` — removed invalid `PROTEGRITY_PROTECTION_ENDPOINT` variable.
 
 ### 6. **Documentation** ✓
-Updated `PREREQUISITES.md` with complete setup instructions.
+Updated `PREREQUISITES.md` and other docs to reflect SDK-based protection.
 
 ---
 
@@ -104,7 +109,7 @@ Should show: ✅ **Protection API: Connected**
 | "Environment variable not set" | Set env vars again, restart Cursor |
 | "401 Unauthorized" | Check credentials at https://www.protegrity.com/developers/dev-edition-api |
 | "Connection refused" | Check internet connection |
-| "protection endpoint not configured" | Reload Cursor - config.json is already updated |
+| "protection endpoint not configured" | No longer applicable — uses appython SDK, not a localhost endpoint |
 
 ---
 

@@ -3,6 +3,7 @@
 // Usage:
 //   node wrapper-runner.js classify "text to classify"
 //   node wrapper-runner.js protect "text to protect" "superuser" "name"
+//   node wrapper-runner.js unprotect "<token>" "superuser" "name"
 //   node wrapper-runner.js guardrail '[{"role":"user","content":"..."}]'
 
 const path = require('path');
@@ -11,7 +12,7 @@ const wrapper = require(path.join(__dirname, 'api-wrapper'));
 async function main() {
   const args = process.argv.slice(2);
   if (args.length < 2) {
-    console.error('Usage: wrapper-runner.js <classify|protect|guardrail> <input> [policy_user] [data_element]');
+    console.error('Usage: wrapper-runner.js <classify|protect|unprotect|guardrail> <input> [policy_user] [data_element]');
     process.exit(2);
   }
   const cmd = args[0];
@@ -24,7 +25,10 @@ async function main() {
       const res = await wrapper.classify(input);
       console.log(JSON.stringify(res, null, 2));
     } else if (cmd === 'protect') {
-      const res = await wrapper.protect(input, policyUser, dataElement);
+      const res = wrapper.protect(input, policyUser, dataElement);
+      console.log(JSON.stringify(res, null, 2));
+    } else if (cmd === 'unprotect') {
+      const res = wrapper.unprotect(input, policyUser, dataElement);
       console.log(JSON.stringify(res, null, 2));
     } else if (cmd === 'guardrail') {
       let messages;

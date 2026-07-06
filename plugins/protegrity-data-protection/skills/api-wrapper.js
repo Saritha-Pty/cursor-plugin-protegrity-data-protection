@@ -1,8 +1,11 @@
 // Wrapper to call Protegrity APIs from plugin code.
-// This is a minimal JS module used by skills to call classification, protection, and guardrail endpoints.
+// Classification and guardrail calls go to local Docker services (ports 8580/8581).
+// Protect/unprotect uses the appython SDK via a Python subprocess — the SDK's
+// hosted URL is internal; no localhost:8090 endpoint is used.
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 const fetch = require('node-fetch');
 
 function loadConfig() {
@@ -29,36 +32,35 @@ async function classify(text) {
   return resp.json();
 }
 
-async function protect(data, policyUser = 'superuser', dataElement = 'name') {
-  const url = process.env.PROTEGRITY_PROTECTION_ENDPOINT || cfg.protection_endpoint;
-  if (!url) throw new Error('protection endpoint not configured');
-  
-  const email = process.env.DEV_EDITION_EMAIL;
-  const password = process.env.DEV_EDITION_PASSWORD;
-  const apiKey = process.env.DEV_EDITION_API_KEY;
-  
-  if (!email || !password || !apiKey) {
-    throw new Error('Missing required environment variables: DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD, DEV_EDITION_API_KEY');
-  }
-  
-  const resp = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      data,
-      policy_user: policyUser,
-      data_element: dataElement,
-      email,
-      password,
-      api_key: apiKey
-    })
-  });
-  
-  if (!resp.ok) {
-    const errorText = await resp.text();
-    throw new Error(`protection call failed: ${resp.status} - ${errorText}`);
-  }
-  return resp.json();
+/**
+ * Protect data via the appython SDK by delegating to py_api_wrapper.py.
+ * Requires DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD, DEV_EDITION_API_KEY env vars
+ * and the protegrity-ai-developer-python package to be installed.
+ */
+function protect(data, policyUser = 'superuser', dataElement = 'name') {
+  const pyWrapper = path.join(__dirname, 'py_api_wrapper.py');
+  const out = execFileSync('python3', [
+    pyWrapper, 'protect',
+    '--input_data', data,
+    '--policy_user', policyUser,
+    '--data_element', dataElement
+  ], { encoding: 'utf8', env: process.env });
+  return JSON.parse(out);
+}
+
+/**
+ * Unprotect a token via the appython SDK by delegating to py_api_wrapper.py.
+ * Requires the same DEV_EDITION_* env vars and package as protect().
+ */
+function unprotect(token, policyUser = 'superuser', dataElement = 'name') {
+  const pyWrapper = path.join(__dirname, 'py_api_wrapper.py');
+  const out = execFileSync('python3', [
+    pyWrapper, 'unprotect',
+    '--input_data', token,
+    '--policy_user', policyUser,
+    '--data_element', dataElement
+  ], { encoding: 'utf8', env: process.env });
+  return JSON.parse(out);
 }
 
 async function guardrailScan(messages) {
@@ -73,4 +75,4 @@ async function guardrailScan(messages) {
   return resp.json();
 }
 
-module.exports = { classify, protect, guardrailScan };
+module.exports = { classify, protect, unprotect, guardrailScan };

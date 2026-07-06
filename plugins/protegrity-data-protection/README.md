@@ -1,6 +1,6 @@
 # Protegrity Data Protection
 
-> NOTE: MCP references removed — this repository no longer uses the MCP runner. The plugin now calls the Protegrity APIs directly. Ensure the underlying APIs are reachable via Docker services on ports 8580/8581 or set DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD and DEV_EDITION_API_KEY environment variables for cloud access.
+> The plugin calls the Protegrity APIs directly — no external runner required. Ensure the underlying APIs are reachable: Docker services on ports 8580 (classification) / 8581 (guardrail), or set `DEV_EDITION_EMAIL`, `DEV_EDITION_PASSWORD` and `DEV_EDITION_API_KEY` environment variables and install the `protegrity-ai-developer-python` SDK (`pip install protegrity-ai-developer-python`) for protect/unprotect.
 
 A comprehensive Cursor IDE plugin for protecting sensitive data in prompts and AI workflows using Protegrity AI Developer Edition APIs.
 

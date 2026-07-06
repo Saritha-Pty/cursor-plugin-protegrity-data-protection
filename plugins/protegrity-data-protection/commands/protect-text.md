@@ -20,12 +20,15 @@ Before using this command, ensure you have:
 - DEV_EDITION_PASSWORD
 - DEV_EDITION_API_KEY
 
+✅ **appython SDK** - REQUIRED
+- Install: `pip install protegrity-ai-developer-python`
+- Import: `appython` (the hosted URL is internal to the SDK — no localhost endpoint needed)
+
 ✅ **Python 3.9+** - REQUIRED
 - Verify: `python3 --version`
 
 ✅ **Network Access** - REQUIRED
 - Outbound HTTPS to Protegrity cloud APIs
-- Test: `curl https://api.protegrity.com` (should connect)
 
 ✅ **Policy User Configuration** - REQUIRED
 - Typical value: "superuser"
@@ -41,7 +44,12 @@ Go to: https://www.protegrity.com/developers/dev-edition-api
 Sign up and obtain: Email, Password, API Key
 ```
 
-**Step 2: Set Environment Variables (Linux/macOS)**
+**Step 2: Install the appython SDK**
+```bash
+pip install protegrity-ai-developer-python
+```
+
+**Step 3: Set Environment Variables (Linux/macOS)**
 ```bash
 export DEV_EDITION_EMAIL='your-email@company.com'
 export DEV_EDITION_PASSWORD='your-password'
