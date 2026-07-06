@@ -1,8 +1,11 @@
 {
   "protegrity": {
-    "classification_endpoint": "http://localhost:8580/pty/data-discovery/v1.1/classify",
+    "version": "1.2.0",
+    "classification_endpoint": "http://localhost:8580/pty/data-discovery/v2.0/classify",
+    "redaction_endpoint": "http://localhost:8580/pty/data-discovery/v2.0/redact",
     "semantic_guardrail_endpoint": "http://localhost:8581/pty/semantic-guardrail/v1.1/conversations/messages/scan",
-    "synthetic_data_endpoint": "http://localhost:8095/pty/synthetic-data/v1",
+    "synthetic_data_endpoint": "http://localhost:8095/pty/syntheticdata/v2",
+    "anonymization_endpoint": "http://localhost:8085/pty/anonymization/v3",
     "classification_score_threshold": 0.6,
     "enable_logging": true,
     "log_level": "INFO",
@@ -20,7 +23,10 @@
       "IP_ADDRESS": "IP",
       "ACCOUNT_NUMBER": "ACCOUNT",
       "PASSPORT_NUMBER": "PASSPORT",
-      "DRIVER_LICENSE_NUMBER": "LICENSE"
+      "DRIVER_LICENSE_NUMBER": "LICENSE",
+      "DATE_OF_BIRTH": "DOB",
+      "MEDICAL_RECORD": "MEDICAL",
+      "BANK_ACCOUNT": "BANK"
     },
     "risk_thresholds": {
       "block": 0.9,
@@ -32,6 +38,43 @@
       "enabled": true,
       "log_directory": ".protegrity-logs",
       "retention_days": 90
+    },
+    "features": {
+      "data_discovery": {
+        "enabled": true,
+        "requires_registration": false,
+        "requires_docker": true,
+        "service_port": 8580,
+        "api_version": "2.0.0"
+      },
+      "data_protection": {
+        "enabled": true,
+        "requires_registration": true,
+        "requires_docker": false,
+        "sdk_package": "protegrity-ai-developer-python",
+        "sdk_import": "appython"
+      },
+      "semantic_guardrail": {
+        "enabled": true,
+        "requires_registration": false,
+        "requires_docker": true,
+        "service_port": 8581,
+        "api_version": "1.1.1"
+      },
+      "synthetic_data": {
+        "enabled": true,
+        "requires_registration": false,
+        "requires_docker": true,
+        "service_port": 8095,
+        "api_version": "2.0.0"
+      },
+      "anonymization": {
+        "enabled": true,
+        "requires_registration": false,
+        "requires_docker": true,
+        "service_port": 8085,
+        "api_version": "2.0.0"
+      }
     }
   }
 }
