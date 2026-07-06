@@ -136,7 +136,7 @@ def anonymize(data, method='redact'):
     if not url:
         raise RuntimeError(
             'Anonymization endpoint not configured.\n'
-            '  Start the service: cd anonymization && docker compose up -d && cd ..\n'
+            '  From the protegrity-ai-developer-edition directory, run: cd anonymization && docker compose up -d && cd ..\n'
             '  Or set PROTEGRITY_ANONYMIZATION_ENDPOINT env var.'
         )
     resp = requests.post(url, json={'data': data, 'method': method})
@@ -150,7 +150,7 @@ def synthetic_data(schema):
     if not url:
         raise RuntimeError(
             'Synthetic Data endpoint not configured.\n'
-            '  Start the service: cd synthetic-data && docker compose up -d && cd ..\n'
+            '  From the protegrity-ai-developer-edition directory, run: cd synthetic-data && docker compose up -d && cd ..\n'
             '  Or set PROTEGRITY_SYNTHETIC_DATA_ENDPOINT env var.'
         )
     resp = requests.post(url + '/generate', json={'schema': schema})
@@ -168,7 +168,7 @@ def _cli():
         print('  py_api_wrapper.py guardrail <input>')
         print('  py_api_wrapper.py anonymize <input> [method]')
         print('  py_api_wrapper.py synthetic-data <input>')
-        sys.exit(2)
+        sys.exit(1)
 
     cmd = sys.argv[1]
     inp = sys.argv[2]

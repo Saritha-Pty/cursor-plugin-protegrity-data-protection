@@ -23,7 +23,7 @@ async function main() {
     console.error('  wrapper-runner.js guardrail <input>');
     console.error('  wrapper-runner.js anonymize <input> [method]');
     console.error('  wrapper-runner.js synthetic-data <input>');
-    process.exit(2);
+    process.exit(1);
   }
   const cmd = args[0];
   const input = args[1];
