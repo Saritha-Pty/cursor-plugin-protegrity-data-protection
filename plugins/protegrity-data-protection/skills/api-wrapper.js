@@ -127,13 +127,13 @@ async function unprotect(data, policyUser = 'superuser', dataElement = 'name') {
   });
 }
 
-async function classifyTabular(csvText) {
+async function classifyTabular(tabularData) {
   const url = process.env.PROTEGRITY_CLASSIFICATION_ENDPOINT || cfg.classification_endpoint;
   if (!url) throw new Error('classification endpoint not configured');
   const resp = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ data: csvText, format: 'tabular' })
+    body: JSON.stringify({ data: tabularData, format: 'tabular' })
   });
   if (!resp.ok) throw new Error(`tabular classification call failed: ${resp.status}`);
   return resp.json();
