@@ -6,8 +6,10 @@
     "test": "jest --runInBand",
     "smoke": "bash scripts/smoke-test.sh"
   },
-  "devDependencies": {
-    "jest": "^29.0.0",
+  "dependencies": {
     "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
   }
 }

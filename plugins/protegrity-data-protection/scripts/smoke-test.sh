@@ -3,10 +3,10 @@ set -euo pipefail
 
 # Smoke test for Protegrity plugin endpoints.
 # - Accepts endpoints from env vars PROTEGRITY_CLASSIFICATION_ENDPOINT and PROTEGRITY_GUARDRAIL_ENDPOINT
-# - Or reads them from plugins/protegrity-data-protection/config.json
+# - Or reads them from config.json in the plugin root
 
-REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-CFG_FILE="$REPO_ROOT/plugins/protegrity-data-protection/config.json"
+PLUGIN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+CFG_FILE="$PLUGIN_DIR/config.json"
 
 get_from_config() {
   local key="$1"
@@ -54,13 +54,13 @@ check_endpoint "$guardrail_endpoint" "$guardrail_payload" || exit 4
 # Try using node wrapper-runner if available
 if command -v node >/dev/null 2>&1; then
   echo "[smoke-test] Running node wrapper-runner classify"
-  node "$REPO_ROOT/plugins/protegrity-data-protection/skills/wrapper-runner.js" classify "Protegrity smoke test" >/dev/null 2>&1 || echo "[smoke-test] wrapper-runner classify failed or returned non-zero"
+  node "$PLUGIN_DIR/skills/wrapper-runner.js" classify "Protegrity smoke test" >/dev/null 2>&1 || echo "[smoke-test] wrapper-runner classify failed or returned non-zero"
 fi
 
 # Try using python wrapper if available
 if command -v python3 >/dev/null 2>&1; then
   echo "[smoke-test] Running python py_api_wrapper classify"
-  python3 "$REPO_ROOT/plugins/protegrity-data-protection/skills/py_api_wrapper.py" classify "Protegrity smoke test" >/dev/null 2>&1 || echo "[smoke-test] python classify failed or returned non-zero"
+  python3 "$PLUGIN_DIR/skills/py_api_wrapper.py" classify "Protegrity smoke test" >/dev/null 2>&1 || echo "[smoke-test] python classify failed or returned non-zero"
 fi
 
 echo "[smoke-test] Completed. If both endpoints were reachable (no network errors), smoke test passed."
