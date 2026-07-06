@@ -1,6 +1,6 @@
 # Protegrity Data Protection
 
-> NOTE: MCP references removed — this repository no longer uses the MCP runner. The plugin now calls the Protegrity APIs directly. Ensure the underlying APIs are reachable via Docker services on ports 8580/8581 or set DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD and DEV_EDITION_API_KEY environment variables for cloud access.
+> NOTE: MCP has been removed entirely from this repository. The plugin uses skills, commands, agents, and rules that call library functions directly. Ensure APIs are reachable via local Docker services on ports 8580/8581 or cloud credentials via DEV_EDITION_* env vars.
 
 A comprehensive Cursor IDE plugin for protecting sensitive data in prompts and AI workflows using Protegrity AI Developer Edition APIs.
 
@@ -36,7 +36,7 @@ A comprehensive Cursor IDE plugin for protecting sensitive data in prompts and A
 | Feature | Key Requirements | Setup Time |
 |---------|------------------|-----------|
 | **Analyze Data Sensitivity** | Classification API (Docker/Cloud) | 5 min |
-| **Protect/Unprotect Text** | API Credentials + Env Variables | 10 min |
+| **Protect/Unprotect Text** | API Credentials + Env Variables + SDK install | 10 min |
 | **Redact Sensitive Data** | Classification API | 5 min |
 | **Scan Conversation Risk** | Semantic Guardrail API (Docker/Cloud) | 5 min |
 | **Synthetic Data** | Docker Compose with `--profile synthetic` | 10 min |
@@ -59,7 +59,7 @@ A comprehensive Cursor IDE plugin for protecting sensitive data in prompts and A
 
 ### Scenario 2: I want to protect sensitive data for AI prompts
 → Use **Protect Text** command
-→ Prerequisites: Protegrity API account + Environment variables (10 min setup)
+→ Prerequisites: Protegrity API account + Environment variables + SDK package installed (`protegrity-ai-developer-python`)
 → See: [PREREQUISITES.md - Protect Text](./PREREQUISITES.md#2-protect-text-command)
 
 ### Scenario 3: I want to check conversations for data leaks

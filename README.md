@@ -86,7 +86,6 @@ Select text → Choose redaction method (remove/mask) → Apply changes
 │   │   ├── validate-api-calls.sh
 │   │   ├── sanitize-prompt.sh
 │   │   └── audit-session.sh
-│   ├── mcp.json                        # MCP server config
 │   ├── config.json                     # Plugin configuration
 │   ├── SETUP.md                        # Installation & setup
 │   └── .cursor-plugin/plugin.json      # Plugin metadata
@@ -135,11 +134,16 @@ docker compose up -d
 ```
 
 ### Protection APIs (Registration Required)
+Protection now uses the official Protegrity AI Developer Edition Python SDK (`protegrity-ai-developer-python`, import `appython`).
+
 ```bash
 # Set credentials from https://www.protegrity.com/developers/dev-edition-api
 export DEV_EDITION_EMAIL='your-email@example.com'
 export DEV_EDITION_PASSWORD='your-password'
 export DEV_EDITION_API_KEY='your-api-key'
+
+# Install SDK
+pip install protegrity-ai-developer-python
 ```
 
 ## 📚 Entity Types Supported

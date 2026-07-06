@@ -1,9 +1,11 @@
 // Wrapper to call Protegrity APIs from plugin code.
-// This is a minimal JS module used by skills to call classification, protection, and guardrail endpoints.
+// Classification and semantic guardrail use local/override HTTP endpoints.
+// Protection uses the official Protegrity SDK via the Python wrapper (appython).
 
 const fs = require('fs');
 const path = require('path');
 const fetch = require('node-fetch');
+const { spawn } = require('child_process');
 
 function loadConfig() {
   const cfgPath = path.join(__dirname, '..', 'config.json');
@@ -30,35 +32,51 @@ async function classify(text) {
 }
 
 async function protect(data, policyUser = 'superuser', dataElement = 'name') {
-  const url = process.env.PROTEGRITY_PROTECTION_ENDPOINT || cfg.protection_endpoint;
-  if (!url) throw new Error('protection endpoint not configured');
-  
   const email = process.env.DEV_EDITION_EMAIL;
   const password = process.env.DEV_EDITION_PASSWORD;
   const apiKey = process.env.DEV_EDITION_API_KEY;
-  
+
   if (!email || !password || !apiKey) {
     throw new Error('Missing required environment variables: DEV_EDITION_EMAIL, DEV_EDITION_PASSWORD, DEV_EDITION_API_KEY');
   }
-  
-  const resp = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      data,
-      policy_user: policyUser,
-      data_element: dataElement,
-      email,
-      password,
-      api_key: apiKey
-    })
+
+  const pyWrapperPath = path.join(__dirname, 'py_api_wrapper.py');
+
+  return new Promise((resolve, reject) => {
+    const child = spawn('python3', [pyWrapperPath, 'protect', String(data), String(policyUser), String(dataElement)], {
+      env: process.env
+    });
+
+    let stdout = '';
+    let stderr = '';
+
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk.toString();
+    });
+
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk.toString();
+    });
+
+    child.on('error', (err) => {
+      reject(new Error(`failed to start Python wrapper: ${err.message}`));
+    });
+
+    child.on('close', (code) => {
+      if (code !== 0) {
+        const detail = (stderr || stdout || '').trim();
+        reject(new Error(`protection call failed (exit ${code})${detail ? ` - ${detail}` : ''}`));
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(stdout);
+        resolve(parsed);
+      } catch (e) {
+        reject(new Error(`failed to parse protection response: ${e.message}`));
+      }
+    });
   });
-  
-  if (!resp.ok) {
-    const errorText = await resp.text();
-    throw new Error(`protection call failed: ${resp.status} - ${errorText}`);
-  }
-  return resp.json();
 }
 
 async function guardrailScan(messages) {

@@ -23,10 +23,15 @@ $env:DEV_EDITION_PASSWORD = 'your-password'
 $env:DEV_EDITION_API_KEY = 'your-api-key'
 ```
 
-### 3. Restart Cursor IDE
+### 3. Install SDK Dependency
+```bash
+pip install protegrity-ai-developer-python
+```
+
+### 4. Restart Cursor IDE
 Close and reopen Cursor completely.
 
-### 4. Test It
+### 5. Test It
 In Cursor Command Palette:
 ```
 /protect-text John Smith
@@ -34,66 +39,12 @@ In Cursor Command Palette:
 
 ---
 
-## ✅ What's Been Configured
+## ✅ What's Configured
 
-All necessary changes have been made to your repository:
-
-### 1. **config.json** ✓
-Added `protection_endpoint`:
-```json
-"protection_endpoint": "http://localhost:8090/pty/data-protection/v1/protect"
-```
-
-### 2. **JavaScript Wrapper** ✓
-`skills/api-wrapper.js` now includes:
-```javascript
-async function protect(data, policyUser = 'superuser', dataElement = 'name')
-```
-
-### 3. **Python Wrapper** ✓
-`skills/py_api_wrapper.py` now includes:
-```python
-def protect(data, policy_user='superuser', data_element='name')
-```
-
-### 4. **Wrapper Runner** ✓
-`skills/wrapper-runner.js` updated with protect command support:
-```bash
-node wrapper-runner.js protect "John Smith" "superuser" "name"
-```
-
-### 5. **Environment Template** ✓
-Created `.env.example` with all required variables.
-
-### 6. **Documentation** ✓
-Updated `PREREQUISITES.md` with complete setup instructions.
-
----
-
-## 🚀 Ready to Use
-
-Your Cursor IDE can now execute `/protect-text` smoothly!
-
-**Test command:**
-```
-/protect-text John Smith
-```
-
-**Expected response:**
-- Prompts for policy user (default: superuser)
-- Prompts for data element type (default: name)
-- Returns: Protected token
-
----
-
-## 📋 Verify Installation
-
-Run in Cursor Command Palette:
-```
-Protegrity: Status Check
-```
-
-Should show: ✅ **Protection API: Connected**
+- Protect path uses official SDK import: `appython`
+- Credentials are read from: `DEV_EDITION_EMAIL`, `DEV_EDITION_PASSWORD`, `DEV_EDITION_API_KEY`
+- Classification and semantic guardrail continue to use local services (`:8580`, `:8581`)
+- No localhost:8090 endpoint is used for protect
 
 ---
 
@@ -102,23 +53,10 @@ Should show: ✅ **Protection API: Connected**
 | Problem | Solution |
 |---------|----------|
 | "Environment variable not set" | Set env vars again, restart Cursor |
+| "Missing dependency ... appython" | Install with `pip install protegrity-ai-developer-python` |
 | "401 Unauthorized" | Check credentials at https://www.protegrity.com/developers/dev-edition-api |
-| "Connection refused" | Check internet connection |
-| "protection endpoint not configured" | Reload Cursor - config.json is already updated |
+| "Unable to invoke protect via appython SDK" | Verify installed SDK version and available method names |
 
 ---
 
-## 📝 Files Modified
-
-```
-✓ plugins/protegrity-data-protection/config.json
-✓ plugins/protegrity-data-protection/skills/api-wrapper.js
-✓ plugins/protegrity-data-protection/skills/py_api_wrapper.py
-✓ plugins/protegrity-data-protection/skills/wrapper-runner.js
-✓ plugins/protegrity-data-protection/PREREQUISITES.md
-✓ plugins/protegrity-data-protection/.env.example (NEW)
-```
-
----
-
-**All done! Your repository is now fully configured for the protect-text command.** ✨
+**Done — protect-text is configured to use the official SDK path.**
