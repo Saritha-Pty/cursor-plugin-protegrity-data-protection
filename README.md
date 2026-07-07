@@ -1,222 +1,113 @@
 # Protegrity Data Protection Cursor Plugin
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](plugins/protegrity-data-protection/.cursor-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/version-1.1.0-green.svg)](plugins/protegrity-data-protection/.cursor-plugin/plugin.json)
 [![Cursor Plugin](https://img.shields.io/badge/cursor-plugin-blueviolet.svg)](https://www.cursor.com)
 
-A comprehensive Cursor IDE plugin for protecting sensitive data in prompts and AI workflows using Protegrity AI Developer Edition's enterprise-grade privacy APIs.
+A customer-friendly Cursor IDE plugin for Protegrity AI Developer Edition that helps new users discover sensitive data, protect prompts, redact content, generate synthetic data, and use guardrail workflows without taking control away from the user.
 
-## 🔐 Features
+## What this plugin helps you do
 
-### Data Discovery & Classification
-- **PII Detection**: Automatically identify personally identifiable information
-- **Entity Recognition**: Detect 12+ PII entity types with confidence scores
-- **Text Classification**: Classify text snippets by sensitivity level
+- Discover PII in selected text or files
+- Redact or mask sensitive content
+- Protect and unprotect text using Developer Edition tokenization APIs
+- Evaluate conversation risk with semantic guardrails
+- Generate synthetic data for safe testing
+- Follow simple, guided setup steps based on the feature you want
 
-### Data Protection
-- **Masking**: Replace sensitive data with configurable characters (#, *, etc.)
-- **Redaction**: Completely remove detected PII from text
-- **Tokenization**: Enterprise-grade reversible protection with tokens
+## What changed in this version
 
-### AI Safety
-- **Semantic Guardrails**: Evaluate conversation risk in multi-turn interactions
-- **Prompt Sanitization**: Automatically protect prompts before sending to LLMs
-- **Output Validation**: Detect sensitive data leakage in AI model outputs
+- Focused onboarding for new Developer Edition users
+- Clear prerequisites by feature so you only install what you need
+- Removed MCP-related guidance and references from the plugin experience
+- More customer-friendly language and step-by-step workflow help
+- Improved task-driven guidance so the customer stays in control
 
-### Privacy-Enhancing Tech
-- **Synthetic Data**: Generate realistic, anonymized datasets for testing
-- **Audit Logging**: Full compliance tracking of all protection operations
+## Feature map
 
-## 🚀 Quick Start
+### 1) Discover sensitive data
+Use this when you want to find PII in text, code, or documents.
 
-### Installation
+**Requires:**
+- Docker Desktop
+- Developer Edition local services for data discovery
 
-1. **Install Plugin**: Open Cursor → Settings → Marketplace → Search "Protegrity" → Install
-2. **Setup Services**: Follow [SETUP.md](plugins/protegrity-data-protection/SETUP.md)
-3. **Configure Credentials**: Set `DEV_EDITION_EMAIL`, `DEV_EDITION_PASSWORD`, `DEV_EDITION_API_KEY`
-4. **Verify**: Use any data discovery command to test
+**Useful outputs:**
+- Entity detection
+- Sensitivity classification
+- Next-step guidance for redaction or protection
 
-### Basic Usage
+### 2) Redact or mask data
+Use this when you want to remove or hide sensitive data from shared text.
 
-**Find PII in text:**
-```
-Cmd+Shift+P → "Protegrity: Analyze Data Sensitivity"
-Select text → Choose entity types → Review results
-```
+**Requires:**
+- Docker Desktop
+- Developer Edition data discovery service
 
-**Protect sensitive data:**
-```
-Cmd+Shift+P → "Protegrity: Protect Text"
-Select text → Provide policy user and data element → Get protected token
-```
+### 3) Protect or unprotect text
+Use this when you want reversible tokenization.
 
-**Redact information:**
-```
-Cmd+Shift+P → "Protegrity: Redact Sensitive Data"
-Select text → Choose redaction method (remove/mask) → Apply changes
-```
+**Requires:**
+- Protegrity Developer Edition account
+- `DEV_EDITION_EMAIL`
+- `DEV_EDITION_PASSWORD`
+- `DEV_EDITION_API_KEY`
+- Official Developer Edition SDK installed
 
-## 📋 What's Included
+### 4) Scan conversation risk
+Use this when you want to check prompts or conversations for privacy risk.
 
-```
-.
-├── plugins/protegrity-data-protection/
-│   ├── rules/                          # Data protection standards
-│   │   ├── data-protection-standards.mdc
-│   │   └── privacy-review-checklist.mdc
-│   ├── skills/                         # Protection workflows
-│   │   ├── data-discovery/
-│   │   ├── data-redaction/
-│   │   ├── data-protection/
-│   │   ├── semantic-guardrails/
-│   │   └── synthetic-data-generation/
-│   ├── agents/                         # AI reviewers
-│   │   ├── privacy-reviewer.md
-│   │   └── security-compliance-auditor.md
-│   ├── commands/                       # Direct actions
-│   │   ├── protect-text.md
-│   │   ├── unprotect-text.md
-│   │   ├── redact-sensitive-data.md
-│   │   ├── scan-conversation-risk.md
-│   │   └── analyze-data-sensitivity.md
-│   ├── hooks/
-│   │   └── hooks.json                  # File edit & API call hooks
-│   ├── scripts/                        # Hook implementations
-│   │   ├── scan-for-pii.sh
-│   │   ├── validate-api-calls.sh
-│   │   ├── sanitize-prompt.sh
-│   │   └── audit-session.sh
-│   ├── config.json                     # Plugin configuration
-│   ├── SETUP.md                        # Installation & setup
-│   └── .cursor-plugin/plugin.json      # Plugin metadata
-├── .cursor-plugin/marketplace.json      # Marketplace config
-└── README.md
-```
+**Requires:**
+- Docker Desktop
+- Developer Edition semantic guardrail service
 
-## 🔧 Components
+### 5) Generate synthetic data
+Use this when you want test data that is safer than production data.
 
-### Rules
-- **data-protection-standards**: Core principles for handling sensitive data
-- **privacy-review-checklist**: Pre-deployment verification checklist
+**Requires:**
+- Docker Desktop
+- Developer Edition synthetic data service
 
-### Skills
-- **data-discovery**: Find and enumerate PII entities
-- **data-redaction**: Remove or mask sensitive information
-- **data-protection**: Protect/unprotect with tokenization APIs
-- **semantic-guardrails**: Evaluate conversation risk
-- **synthetic-data-generation**: Create anonymized datasets
+## Recommended setup path for new users
 
-### Agents
-- **privacy-reviewer**: Reviews code for data exposure risks
-- **security-compliance-auditor**: Full security and compliance audit
+1. Install the plugin in Cursor
+2. Open the setup guide in `plugins/protegrity-data-protection/SETUP.md`
+3. Choose the feature you want first
+4. Install only the prerequisites for that feature
+5. Run the plugin status check
+6. Start using the guided commands
 
-### Commands
-- **protect-text**: Tokenize data (requires credentials)
-- **unprotect-text**: Retrieve original data (requires credentials)
-- **redact-sensitive-data**: Remove/mask PII
-- **scan-conversation-risk**: Evaluate multi-turn conversation safety
-- **analyze-data-sensitivity**: Get protection recommendations
+## Customer experience principles
 
-### Hooks
-- **afterFileEdit**: Scan for exposed PII after edits
-- **beforeShellExecution**: Validate API calls contain no raw PII
-- **beforePromptSend**: Sanitize prompts before AI submission
-- **sessionEnd**: Generate compliance audit log
+- The plugin explains what the customer should do, step by step
+- The plugin avoids technical overload unless the user asks for it
+- The plugin uses simple language and clear action prompts
+- The plugin does not ask Cursor to take over the workflow
+- The plugin encourages the customer to drive the task from the command palette
 
-## 🔑 API Requirements
+## Components
 
-### Data Discovery & Guardrails (Local)
-```bash
-# Start Protegrity services locally
-git clone https://github.com/Protegrity-Developer-Edition/protegrity-developer-edition.git
-cd protegrity-developer-edition
-docker compose up -d
-```
+- Rules for privacy-safe behavior
+- Skills for discovery, redaction, protection, guardrails, and synthetic data
+- Commands for direct user actions
+- Setup and prerequisite guides
 
-### Protection APIs (Registration Required)
-Protection now uses the official Protegrity AI Developer Edition Python SDK (`protegrity-ai-developer-python`, import `appython`).
+## Documentation
 
-```bash
-# Set credentials from https://www.protegrity.com/developers/dev-edition-api
-export DEV_EDITION_EMAIL='your-email@example.com'
-export DEV_EDITION_PASSWORD='your-password'
-export DEV_EDITION_API_KEY='your-api-key'
+- [Setup Guide](plugins/protegrity-data-protection/SETUP.md)
+- [Quick Start](plugins/protegrity-data-protection/QUICK_START.md)
+- [Prerequisites by Feature](plugins/protegrity-data-protection/PREREQUISITES.md)
+- [Protegrity AI Developer Edition Docs](https://developer.docs.protegrity.com/docs/)
 
-# Install SDK
-pip install protegrity-ai-developer-python
-```
+## Notes
 
-## 📚 Entity Types Supported
+- No MCP is used in this plugin.
+- Keep credentials out of source control.
+- Use only the prerequisites needed for the feature you want to run.
 
-- PERSON
-- LOCATION
-- EMAIL_ADDRESS
-- PHONE_NUMBER
-- SOCIAL_SECURITY_ID (SSN)
-- CREDIT_CARD_NUMBER
-- AGE
-- USERNAME
-- IP_ADDRESS
-- ACCOUNT_NUMBER
-- PASSPORT_NUMBER
-- DRIVER_LICENSE_NUMBER
+## Support
 
-For complete list and details: [Supported Entities](https://developer.docs.protegrity.com/docs/entities/)
+- Plugin issues: [GitHub Issues](https://github.com/Saritha-Pty/cursor-plugin-protegrity-data-protection/issues)
+- Protegrity docs: https://developer.docs.protegrity.com/docs/
 
-## 🔒 Security Best Practices
-
-1. **Never hardcode credentials**: Use environment variables only
-2. **Apply protection early**: Protect data before AI processing
-3. **Use appropriate methods**: Match protection level to data sensitivity
-4. **Monitor audit logs**: Review protection operations regularly
-5. **Validate outputs**: Check AI model outputs for data leakage
-6. **Test synthetic data**: Use generated datasets instead of production data
-
-## 📖 Documentation
-
-- **Setup & Installation**: [SETUP.md](plugins/protegrity-data-protection/SETUP.md)
-- **Protegrity AI Developer Edition**: https://developer.docs.protegrity.com/
-- **Data Discovery API**: https://docs.protegrity.com/data-discovery/1.1.1/docs/
-- **Semantic Guardrails**: https://docs.protegrity.com/sem_guardrail/1.1.0/docs/
-- **Synthetic Data**: https://docs.protegrity.com/synthetic-data/1.0.0/docs/
-- **Developer Portal**: https://www.protegrity.com/developers
-
-## 🤝 Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Commit changes: `git commit -m 'Add your feature'`
-4. Push to branch: `git push origin feature/your-feature`
-5. Open a Pull Request
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) for details
-
-## 🙋 Support
-
-- **Plugin Issues**: [GitHub Issues](https://github.com/Saritha-Pty/cursor-plugin-protegrity-data-protection/issues)
-- **Protegrity Community**: [GitHub Discussions](https://github.com/orgs/Protegrity-Developer-Edition/discussions)
-- **API Documentation**: [Protegrity Docs](https://developer.docs.protegrity.com/)
-
-## 🗺️ Roadmap
-
-- [ ] Real-time PII detection as you type
-- [ ] Integration with popular LLMs (OpenAI, Anthropic, Cohere)
-- [ ] Custom entity type definitions
-- [ ] Advanced policy management UI
-- [ ] Integration with CI/CD pipelines
-- [ ] Batch processing for large datasets
-- [ ] Enhanced analytics dashboard
-
-## 🙏 Acknowledgments
-
-- Built on the [Cursor Plugin Template](https://github.com/cursor/plugin-template)
-- Powered by [Protegrity AI Developer Edition](https://github.com/Protegrity-Developer-Edition)
-- Special thanks to the Cursor and Protegrity communities
-
----
-
-**Protect your data. Secure your AI. Build with confidence.** 🛡️
+**Protect your data. Keep control with the customer.**

@@ -1,85 +1,58 @@
 # Protegrity Data Protection
 
-> NOTE: MCP has been removed entirely from this repository. The plugin uses skills, commands, agents, and rules that call library functions directly. Ensure APIs are reachable via local Docker services on ports 8580/8581 or cloud credentials via DEV_EDITION_* env vars.
+> This plugin helps Cursor users work with Protegrity AI Developer Edition in a simple, task-driven way. It does **not** use MCP. Follow the setup guide for the specific feature you want, and only install the prerequisites for that feature.
 
-A comprehensive Cursor IDE plugin for protecting sensitive data in prompts and AI workflows using Protegrity AI Developer Edition APIs.
+## What this plugin includes
 
-## Features
+- PII discovery and classification
+- Redaction and masking
+- Tokenization protection and unprotection
+- Semantic guardrail scanning
+- Synthetic data workflows
+- Customer-friendly setup and troubleshooting guidance
 
-- **PII Discovery**: Automatically detect personally identifiable information in selected text
-- **Data Masking**: Replace detected entities with configurable masking characters
-- **Data Redaction**: Remove sensitive data completely
-- **Tokenization Protection**: Protect/unprotect data using enterprise tokenization APIs
-- **Semantic Guardrails**: Evaluate conversation risk and PII exposure in multi-turn interactions
-- **Synthetic Data**: Generate privacy-preserving synthetic datasets
-- **Configuration Management**: Customize entity mappings and protection methods
+## Feature prerequisites
 
-## Quick Start
+### Discover sensitive data
+- Docker Desktop
+- Developer Edition local data discovery service
 
-1. Install the plugin in Cursor IDE
-2. **Review [PREREQUISITES.md](./PREREQUISITES.md)** - Each feature has specific requirements
-3. Configure your Protegrity API credentials via environment variables or settings
-4. Use the commands and skills to protect data in your workflow
+### Redact or mask sensitive data
+- Docker Desktop
+- Developer Edition local data discovery service
 
-## Components
+### Protect or unprotect text
+- Developer Edition account
+- Environment variables:
+  - `DEV_EDITION_EMAIL`
+  - `DEV_EDITION_PASSWORD`
+  - `DEV_EDITION_API_KEY`
+- Official Developer Edition SDK
 
-- **Rules**: Baseline security and privacy standards
-- **Skills**: Data protection workflows (find, redact, mask, protect, unprotect)
-- **Agents**: Privacy-focused reviewers and security validators
-- **Commands**: Direct protection/unprotection and data analysis commands
-- **Hooks**: Automated scanning and validation on file edits and shell execution
+### Scan conversation risk
+- Docker Desktop
+- Developer Edition semantic guardrail service
 
-## Prerequisites by Feature
+### Generate synthetic data
+- Docker Desktop
+- Developer Edition synthetic data service
 
-> **New to Dev Edition and Cursor?** Start with [PREREQUISITES.md](./PREREQUISITES.md) to understand what you need for each feature.
+## Getting started
 
-| Feature | Key Requirements | Setup Time |
-|---------|------------------|-----------|
-| **Analyze Data Sensitivity** | Classification API (Docker/Cloud) | 5 min |
-| **Protect/Unprotect Text** | API Credentials + Env Variables + SDK install | 10 min |
-| **Redact Sensitive Data** | Classification API | 5 min |
-| **Scan Conversation Risk** | Semantic Guardrail API (Docker/Cloud) | 5 min |
-| **Synthetic Data** | Docker Compose with `--profile synthetic` | 10 min |
-| **Privacy Reviewer Agent** | Classification API + AI Model | 5 min |
-| **Security Compliance Auditor** | All APIs + Audit Logging | 15 min |
+1. Read `SETUP.md`
+2. Choose the feature you want
+3. Install only the prerequisites for that feature
+4. Run the plugin commands from Cursor
 
-## Documentation
+## User guidance style
 
-- **Setup Guide**: See [SETUP.md](./SETUP.md) for detailed installation steps
-- **Prerequisites**: See [PREREQUISITES.md](./PREREQUISITES.md) for feature-specific requirements
-- **Testing**: See [TESTING.md](./TESTING.md) for comprehensive test scenarios
-- **API Docs**: [Protegrity AI Developer Edition](https://developer.docs.protegrity.com/)
-
-## Common Scenarios
-
-### Scenario 1: I want to detect PII in my code
-→ Use **Analyze Data Sensitivity** command
-→ Prerequisites: Classification API (5 min setup)
-→ See: [PREREQUISITES.md - Analyze Data Sensitivity](./PREREQUISITES.md#1-analyze-data-sensitivity-command)
-
-### Scenario 2: I want to protect sensitive data for AI prompts
-→ Use **Protect Text** command
-→ Prerequisites: Protegrity API account + Environment variables + SDK package installed (`protegrity-ai-developer-python`)
-→ See: [PREREQUISITES.md - Protect Text](./PREREQUISITES.md#2-protect-text-command)
-
-### Scenario 3: I want to check conversations for data leaks
-→ Use **Scan Conversation Risk** command
-→ Prerequisites: Semantic Guardrail API (5 min setup)
-→ See: [PREREQUISITES.md - Scan Conversation Risk](./PREREQUISITES.md#5-scan-conversation-risk-command)
-
-### Scenario 4: I want a full privacy audit of my codebase
-→ Use **Privacy Reviewer Agent**
-→ Prerequisites: Classification API + AI model (5 min setup)
-→ See: [PREREQUISITES.md - Privacy Reviewer Agent](./PREREQUISITES.md#7-privacy-reviewer-agent)
-
-## Troubleshooting
-
-For comprehensive troubleshooting, error indicators, and solutions for each feature, see:
-→ [PREREQUISITES.md - Troubleshooting](./PREREQUISITES.md#troubleshooting)
+The plugin should speak to the customer directly, for example:
+- “Choose the feature you want to use.”
+- “Here is what you need to install.”
+- “Now run this command in Cursor.”
+- “You can stop here if you only need this one feature.”
 
 ## Support
 
-- **Plugin Issues**: Create an issue in this repository
-- **Protegrity API Questions**: Visit https://github.com/Protegrity-Developer-Edition/discussions
-- **API Documentation**: https://developer.docs.protegrity.com/
-- **Register for Dev Edition**: https://www.protegrity.com/developers/dev-edition-api
+- Protegrity docs: https://developer.docs.protegrity.com/docs/
+- Plugin issues: https://github.com/Saritha-Pty/cursor-plugin-protegrity-data-protection/issues
