@@ -11,6 +11,7 @@ This guide helps new Cursor users get started with Protegrity AI Developer Editi
 - Protect or unprotect text
 - Scan conversation risk
 - Generate synthetic data
+- Anonymize structured data
 
 You only need the prerequisites for the feature you choose.
 
@@ -57,6 +58,11 @@ You only need the prerequisites for the feature you choose.
 **You need:**
 - Docker Desktop
 - Local Developer Edition synthetic data service
+
+### 6) Anonymize structured data
+**You need:**
+- Docker Desktop
+- Local Developer Edition anonymization service
 
 ---
 

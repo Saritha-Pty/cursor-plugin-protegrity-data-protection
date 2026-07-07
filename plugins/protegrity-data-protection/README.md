@@ -9,6 +9,7 @@
 - Tokenization protection and unprotection
 - Semantic guardrail scanning
 - Synthetic data workflows
+- Anonymization workflows
 - Customer-friendly setup and troubleshooting guidance
 
 ## Feature prerequisites
@@ -36,6 +37,10 @@
 ### Generate synthetic data
 - Docker Desktop
 - Developer Edition synthetic data service
+
+### Anonymize data
+- Docker Desktop
+- Developer Edition anonymization service
 
 ## Getting started
 

@@ -12,12 +12,13 @@ Choose the task you want Cursor to help with:
 - Protect or unprotect text
 - Scan conversation risk
 - Generate synthetic data
+- Anonymize structured data
 
 ---
 
 ## Step 2: Install only what you need
 
-- For discovery, redaction, guardrails, or synthetic data: install and start the required Docker service
+- For discovery, redaction, guardrails, synthetic data, or anonymization: install and start the required Docker service
 - For protect/unprotect: create a Developer Edition account, set the environment variables, and install the SDK
 
 If you only need one feature, stop after that feature is ready.
@@ -37,6 +38,7 @@ Recommended commands:
 - `Protegrity: Redact Sensitive Data`
 - `Protegrity: Scan Conversation Risk`
 - `Protegrity: Generate Synthetic Data`
+- `Protegrity: Anonymize Data`
 
 ---
 

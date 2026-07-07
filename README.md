@@ -1,7 +1,7 @@
 # Protegrity Data Protection Cursor Plugin
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.1.1-green.svg)](plugins/protegrity-data-protection/.cursor-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/version-1.1.2-green.svg)](plugins/protegrity-data-protection/.cursor-plugin/plugin.json)
 [![Cursor Plugin](https://img.shields.io/badge/cursor-plugin-blueviolet.svg)](https://www.cursor.com)
 
 A customer-friendly Cursor IDE plugin for Protegrity AI Developer Edition that helps new users discover sensitive data, protect prompts, redact content, generate synthetic data, anonymize datasets, and use guardrail workflows without taking control away from the user.
@@ -23,6 +23,7 @@ A customer-friendly Cursor IDE plugin for Protegrity AI Developer Edition that h
 - Removed MCP-related guidance and references from the plugin experience
 - More customer-friendly language and step-by-step workflow help
 - Improved task-driven guidance so the customer stays in control
+- Added anonymization to the included Developer Edition skill set
 
 ## Feature map
 
