@@ -256,13 +256,15 @@ def _cli():
         except Exception:
             print('synthetic: input must be a JSON array of schema fields', file=sys.stderr)
             sys.exit(2)
+        # argv[3] is the count for synthetic; argv[4+] not used
         count = int(sys.argv[3]) if len(sys.argv) > 3 else 10
         out = generate_synthetic_data(schema, count)
         print(json.dumps(out, indent=2))
     elif cmd == 'anonymize':
-        method = sys.argv[3] if len(sys.argv) > 3 else 'pseudonymization'
-        entity_types = sys.argv[4].split(',') if len(sys.argv) > 4 else None
-        out = anonymize(inp, method, entity_types)
+        # argv[3] is the anonymization method; argv[4] is optional comma-separated entity types
+        anon_method = sys.argv[3] if len(sys.argv) > 3 else 'pseudonymization'
+        anon_entities = sys.argv[4].split(',') if len(sys.argv) > 4 else None
+        out = anonymize(inp, anon_method, anon_entities)
         print(json.dumps(out, indent=2))
     else:
         print('Unknown command:', cmd)

@@ -76,7 +76,7 @@ async function main() {
       console.log(JSON.stringify(res, null, 2));
     } else if (cmd === 'anonymize') {
       const method = arg3 !== 'superuser' ? arg3 : 'pseudonymization';
-      const entityTypes = args[3] ? args[3].split(',') : null;
+      const entityTypes = arg4 ? arg4.split(',') : null;
       const res = await wrapper.anonymize(input, method, entityTypes);
       console.log(JSON.stringify(res, null, 2));
     } else if (cmd === 'status') {
