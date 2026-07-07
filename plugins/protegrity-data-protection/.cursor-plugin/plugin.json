@@ -1,9 +1,9 @@
 {
   "name": "protegrity-data-protection",
   "displayName": "Protegrity Data Protection",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Customer-friendly Protegrity AI Developer Edition workflows for Cursor. Discover, redact, protect, scan, generate synthetic data, and anonymize without MCP.",
-  "longDescription": "This plugin helps Cursor users complete Protegrity Developer Edition tasks in a guided, customer-driven way. It focuses on the features new users need most: data discovery, redaction, tokenization protection, semantic guardrails, synthetic data, and anonymization. It avoids MCP and keeps the workflow simple with only the prerequisites required for the selected feature.",
+  "longDescription": "This plugin helps Cursor users complete Protegrity Developer Edition tasks in a guided, customer-driven way. It focuses on the features new users need most: data discovery, redaction, protection, guardrails, synthetic data, and anonymization. Every feature has a clear setup guide, and you only install what you use. The plugin stays out of the way and lets you drive the workflow.",
   "author": {
     "name": "Saritha-Pty",
     "email": "saritha@protegrity.dev"
@@ -22,7 +22,9 @@
     "synthetic-data",
     "anonymization",
     "ai-safety",
-    "cursor"
+    "cursor",
+    "developer-edition",
+    "beginner-friendly"
   ],
   "logo": "assets/logo.svg",
   "setupWizard": true,
