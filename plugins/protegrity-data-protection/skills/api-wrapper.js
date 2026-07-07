@@ -1,5 +1,6 @@
 // Wrapper to call Protegrity APIs from plugin code.
-// Classification and semantic guardrail use local/override HTTP endpoints.
+// Classification, semantic guardrail, synthetic data, and anonymization use
+// local/override HTTP endpoints.
 // Protection uses the official Protegrity SDK via the Python wrapper (appython).
 
 const fs = require('fs');
@@ -91,4 +92,97 @@ async function guardrailScan(messages) {
   return resp.json();
 }
 
-module.exports = { classify, protect, guardrailScan };
+async function generateSyntheticData(schema, count = 10, options = {}) {
+  const url = process.env.PROTEGRITY_SYNTHETIC_ENDPOINT || cfg.synthetic_data_endpoint;
+  if (!url) throw new Error('synthetic data endpoint not configured');
+  const resp = await fetch(`${url}/generate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ schema, count, format: 'json', preserve_distributions: true, ...options })
+  });
+  if (!resp.ok) throw new Error(`synthetic data call failed: ${resp.status}`);
+  return resp.json();
+}
+
+async function anonymize(text, method = 'pseudonymization', entityTypes = null) {
+  const url = process.env.PROTEGRITY_ANONYMIZATION_ENDPOINT || cfg.anonymization_endpoint;
+  if (!url) throw new Error('anonymization endpoint not configured');
+  const body = { text, method };
+  if (entityTypes) body.entity_types = entityTypes;
+  const resp = await fetch(`${url}/anonymize`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!resp.ok) throw new Error(`anonymization call failed: ${resp.status}`);
+  return resp.json();
+}
+
+async function checkServiceHealth(serviceUrl) {
+  try {
+    const base = serviceUrl.replace(/\/pty\/.*$/, '');
+    const resp = await fetch(`${base}/health`, { method: 'GET' });
+    return { reachable: true, status: resp.status, ok: resp.ok };
+  } catch (e) {
+    return { reachable: false, error: e.message };
+  }
+}
+
+async function statusCheck() {
+  const results = {
+    services: {},
+    credentials: {},
+    availableCommands: []
+  };
+
+  // Check Docker services
+  const services = [
+    { name: 'Data Discovery', url: process.env.PROTEGRITY_CLASSIFICATION_ENDPOINT || cfg.classification_endpoint, port: 8580 },
+    { name: 'Semantic Guardrail', url: process.env.PROTEGRITY_GUARDRAIL_ENDPOINT || cfg.semantic_guardrail_endpoint, port: 8581 },
+    { name: 'Synthetic Data', url: process.env.PROTEGRITY_SYNTHETIC_ENDPOINT || cfg.synthetic_data_endpoint, port: 8095 },
+    { name: 'Anonymization', url: process.env.PROTEGRITY_ANONYMIZATION_ENDPOINT || cfg.anonymization_endpoint, port: 8085 }
+  ];
+
+  for (const svc of services) {
+    if (!svc.url) {
+      results.services[svc.name] = { status: 'not configured', ok: false };
+      continue;
+    }
+    const health = await checkServiceHealth(svc.url);
+    results.services[svc.name] = health;
+  }
+
+  // Check API credentials
+  const creds = ['DEV_EDITION_EMAIL', 'DEV_EDITION_PASSWORD', 'DEV_EDITION_API_KEY'];
+  const credStatus = creds.reduce((acc, k) => { acc[k] = !!process.env[k]; return acc; }, {});
+  results.credentials = credStatus;
+  const allCredsSet = creds.every(k => credStatus[k]);
+
+  const discoveryOk = results.services['Data Discovery'] && results.services['Data Discovery'].ok;
+  const guardrailOk = results.services['Semantic Guardrail'] && results.services['Semantic Guardrail'].ok;
+  const syntheticOk = results.services['Synthetic Data'] && results.services['Synthetic Data'].ok;
+  const anonymizationOk = results.services['Anonymization'] && results.services['Anonymization'].ok;
+
+  if (discoveryOk) {
+    results.availableCommands.push('Analyze Data Sensitivity', 'Redact Sensitive Data', 'Find and Redact', 'Privacy Reviewer Agent');
+  }
+  if (allCredsSet) {
+    results.availableCommands.push('Protect Text', 'Unprotect Text');
+  }
+  if (discoveryOk && allCredsSet) {
+    results.availableCommands.push('Find and Protect');
+  }
+  if (guardrailOk) {
+    results.availableCommands.push('Scan Conversation Risk');
+  }
+  if (syntheticOk) {
+    results.availableCommands.push('Generate Synthetic Data');
+  }
+  if (anonymizationOk) {
+    results.availableCommands.push('Anonymize Data');
+  }
+
+  return results;
+}
+
+module.exports = { classify, protect, guardrailScan, generateSyntheticData, anonymize, statusCheck };

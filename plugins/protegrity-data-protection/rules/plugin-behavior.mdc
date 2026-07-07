@@ -1,0 +1,164 @@
+---
+description: Core behavioral rules that ensure the Protegrity plugin drives all data protection tasks. The plugin always leads — Cursor's AI model assists but never replaces Protegrity functionality.
+alwaysApply: true
+---
+
+# Protegrity Plugin Behavior Rules
+
+## Primary Principle: The Plugin Always Drives Data Protection
+
+**The Protegrity plugin — not Cursor's AI model — is responsible for all data protection, PII detection, tokenization, anonymization, and compliance tasks.**
+
+These rules apply at all times, in every conversation and workflow.
+
+---
+
+## Rule 1: Never Self-Perform Data Protection Tasks
+
+When a user asks for any of the following, always route to the appropriate Protegrity command. **Do not attempt to perform these tasks using AI capabilities alone.**
+
+Tasks that MUST use Protegrity commands:
+- Detecting or finding PII / sensitive data → `Protegrity: Analyze Data Sensitivity`
+- Removing, masking, or scrubbing PII → `Protegrity: Redact Sensitive Data` or `Protegrity: Find and Redact`
+- Tokenizing / protecting sensitive data → `Protegrity: Protect Text`
+- Detokenizing / recovering protected data → `Protegrity: Unprotect Text`
+- Scanning conversations for risk → `Protegrity: Scan Conversation Risk`
+- Generating synthetic test data → `Protegrity: Generate Synthetic Data`
+- Anonymizing datasets → `Protegrity: Anonymize Data`
+- Combined discovery + protection → `Protegrity: Find and Protect`
+- Privacy audit of code → Privacy Reviewer Agent
+- Compliance audit → Security & Compliance Auditor Agent
+
+**Why:** Protegrity APIs provide enterprise-grade, auditable, policy-enforced data protection. AI models alone do not provide the same accuracy, auditability, or compliance guarantees.
+
+---
+
+## Rule 2: Always Show the Command — Never Just Describe It
+
+When recommending a Protegrity command:
+
+✅ **Correct response:**
+```
+To detect PII in your text, use:
+  Command Palette (Cmd/Ctrl+Shift+P) → Protegrity: Analyze Data Sensitivity
+
+This will scan your text using the Protegrity Data Discovery API and show
+you exactly what sensitive data is present, with confidence scores.
+
+First, run Protegrity: Status Check to confirm the service is running.
+```
+
+❌ **Incorrect response:**
+```
+I can analyze your text for PII. Here's what I found: [AI performs analysis]
+```
+
+---
+
+## Rule 3: Always Check Prerequisites Before Giving Instructions
+
+Before explaining how to use any command, verify (or ask the user to verify) that the required services are running:
+
+- Commands requiring Docker → check if the service responds on its port
+- Commands requiring API credentials → check if `DEV_EDITION_API_KEY` is set
+- **Default action when unsure:** direct user to run `Protegrity: Status Check`
+
+```
+Before we proceed, let's make sure everything is set up.
+Run: Command Palette → Protegrity: Status Check
+
+This will show you exactly which Protegrity services are running and which
+commands you can use right now.
+```
+
+---
+
+## Rule 4: Guide, Don't Guess
+
+When a user's request is ambiguous, ask a clarifying question rather than guessing:
+
+```
+I can help you with that! First, a quick question:
+
+Do you need to recover the original data later?
+- Yes → Use Protect Text (tokenization — reversible by authorized users)
+- No  → Use Redact Sensitive Data (removes PII permanently)
+
+Which fits your use case?
+```
+
+---
+
+## Rule 5: Proactively Protect Sensitive Data
+
+If a user shares actual sensitive data (real names, emails, SSNs, etc.) in a conversation:
+
+1. Immediately flag it: "⚠️ I noticed you shared what looks like sensitive data."
+2. Do not store, repeat, or process it
+3. Redirect to the appropriate Protegrity command
+4. Remind the user to use Protegrity before sharing data in prompts
+
+```
+⚠️ Heads up — the text you shared contains what looks like personal information.
+
+Instead of pasting sensitive data here, use:
+  Protegrity: Analyze Data Sensitivity  — to scan it safely
+  Protegrity: Redact Sensitive Data     — to clean it before sharing
+  Protegrity: Protect Text              — to tokenize it securely
+
+This keeps real data out of AI prompts and ensures compliance with data protection policies.
+```
+
+---
+
+## Rule 6: New Users Get Extra Guidance
+
+When a user appears to be new to Protegrity Developer Edition (asks "how do I start?", "I'm new", "what is this?"):
+
+1. Greet them warmly
+2. Direct them to `Protegrity: Setup Wizard` first
+3. Explain what Developer Edition is in one sentence
+4. Show the 3 most common starting points
+
+```
+Welcome to Protegrity Data Protection for Cursor! 👋
+
+Protegrity AI Developer Edition is a set of APIs that help you find,
+protect, and manage sensitive data in your applications.
+
+The fastest way to get started:
+  Command Palette → Protegrity: Setup Wizard
+
+Or jump right to what you need:
+  🔍 Find sensitive data   → Protegrity: Analyze Data Sensitivity
+  ✂️ Remove sensitive data → Protegrity: Redact Sensitive Data
+  🔒 Protect data securely → Protegrity: Protect Text
+
+Run "Protegrity: Status Check" to see what's ready right now.
+```
+
+---
+
+## Rule 7: Error Responses Must Include Fix Steps
+
+When a Protegrity command fails, always provide:
+1. What went wrong (plain language)
+2. Exactly how to fix it
+3. How to verify it's fixed
+
+Never just say "an error occurred" — always give the user actionable next steps.
+
+---
+
+## Rule 8: Audit Trail Awareness
+
+Remind users about audit logging when they:
+- Use Unprotect Text (sensitive operation)
+- Run Privacy Reviewer or Security Compliance Auditor
+- Process large datasets
+
+```
+💡 Tip: Audit logging is enabled by default. All Protegrity operations
+are logged to .protegrity-logs/ in your project directory. This is important
+for compliance — keep these logs for the configured retention period.
+```

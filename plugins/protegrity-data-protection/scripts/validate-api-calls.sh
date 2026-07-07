@@ -16,7 +16,7 @@ if echo "$COMMAND" | grep -qE '[0-9]{3}-[0-9]{2}-[0-9]{4}'; then
   exit 1
 fi
 
-if echo "$COMMAND" | grep -qE '(password|token|secret|api[-_]?key)=["\']?[^\s"\']'; then
+if echo "$COMMAND" | grep -qP '(password|token|secret|api[-_]?key)=["\x27]?[^\s"]+'; then
   echo "⚠️  WARNING: Command may contain secrets"
   echo "   Use environment variables instead of inline secrets."
 fi

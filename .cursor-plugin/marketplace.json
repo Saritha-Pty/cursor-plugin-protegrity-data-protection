@@ -1,9 +1,9 @@
 {
   "name": "Protegrity Data Protection Plugin Suite",
   "owner": "Saritha-Pty",
-  "description": "Enterprise-grade data protection for Cursor IDE using Protegrity APIs. ⚠️ SETUP REQUIRED: Docker for discovery/redaction + API credentials for protection. See setup guide before first use.",
-  "detailedDescription": "Comprehensive data discovery, protection, and privacy controls for Cursor IDE using Protegrity AI Developer Edition APIs.\n\n**Key Features:**\n• PII Detection & Classification (12+ entity types)\n• Data Masking & Redaction\n• Enterprise Tokenization (Protect/Unprotect)\n• Semantic Guardrails (conversation risk evaluation)\n• Synthetic Data Generation\n• Privacy & Compliance Auditing\n\n**⚠️ PREREQUISITES BY FEATURE:**\n\n**🐳 Docker + Docker Compose (Local Services)** - Setup: 5-15 minutes\nRequired for:\n  ✓ Analyze Data Sensitivity (PII detection)\n  ✓ Redact Sensitive Data\n  ✓ Scan Conversation Risk (guardrails)\n  ✓ Synthetic Data Generation\n  ✓ Privacy Reviewer Agent\n  ✓ Security Compliance Auditor\n\nSetup: `git clone https://github.com/Protegrity-Developer-Edition/protegrity-developer-edition.git && docker compose up -d`\n\n**🔑 API Credentials** - Setup: 10 minutes\nRequired for:\n  ✓ Protect Text (tokenization)\n  ✓ Unprotect Text (detokenization)\n\nSetup: Register at https://www.protegrity.com/developers/dev-edition-api, set 3 env vars\n\n**📋 NEXT STEPS:**\n1. Install plugin in Cursor Marketplace\n2. Run \"Protegrity: Setup Wizard\" command\n3. Wizard assesses your use case and guides you through gathering prerequisites\n4. Follow setup guides for Docker and/or API credentials as needed\n\nSee PREREQUISITES.md for detailed feature-by-feature requirements.",
-  "version": "1.0.0",
+  "description": "Enterprise-grade data protection for Cursor IDE using Protegrity AI Developer Edition. New users: run 'Protegrity: Setup Wizard' to get started in minutes!",
+  "detailedDescription": "Comprehensive data discovery, protection, and privacy controls for Cursor IDE using Protegrity AI Developer Edition APIs.\n\n**The plugin drives all data protection — not Cursor's AI.**\nEvery operation goes through Protegrity's APIs for enterprise-grade, auditable, policy-enforced protection.\n\n**🆕 New to Protegrity? Start here:**\n1. Install this plugin\n2. Open Command Palette → `Protegrity: Setup Wizard`\n3. The wizard gives you a personalized setup plan in 2 minutes\n4. Run `Protegrity: Status Check` to see what's ready\n\n**Key Features (v2.0.0):**\n• 🔍 Analyze Data Sensitivity — detect 15+ PII entity types\n• ✂️ Redact Sensitive Data — remove or mask PII\n• 🔗 Find and Redact — discover + remove in one step\n• 🔒 Protect Text — enterprise tokenization (reversible)\n• 🔓 Unprotect Text — recover original from token\n• 🔗 Find and Protect — discover + tokenize in one step\n• 🛡️ Scan Conversation Risk — guardrails for AI conversations\n• 🧪 Generate Synthetic Data — realistic fake datasets\n• 🕵️ Anonymize Data — irreversible anonymization\n• 🩺 Status Check — see which services are ready\n• 🧙 Setup Wizard — personalized setup guide\n• 👤 Privacy Reviewer Agent — codebase privacy audit\n• 🔐 Security Compliance Auditor Agent\n\n**⚠️ PREREQUISITES BY FEATURE:**\n\n**🐳 Docker (free, no account needed)**\nRequired for: Analyze, Redact, Find & Redact, Scan Risk, Synthetic Data, Anonymize\nSetup: `git clone https://github.com/Protegrity-AI-Developer-Edition/protegrity-ai-developer-edition.git`\nThen: `cd <service-folder> && docker compose up -d`\n\n**🔑 Free API Account**\nRequired for: Protect Text, Unprotect Text, Find & Protect\nSetup: Register at https://www.protegrity.com/developers/dev-edition-api\n\nSee PREREQUISITES.md for full details.",
+  "version": "2.0.0",
   "repository": "https://github.com/Saritha-Pty/cursor-plugin-protegrity-data-protection",
   "plugins": [
     "plugins/protegrity-data-protection"
@@ -15,12 +15,19 @@
     "protegrity",
     "gdpr",
     "redaction",
-    "tokenization"
+    "tokenization",
+    "anonymization",
+    "synthetic-data",
+    "guardrails",
+    "data-discovery",
+    "compliance",
+    "hipaa",
+    "ccpa"
   ],
   "categories": [
     "security",
     "privacy"
   ],
-  "setupComplexity": "medium",
-  "setupTime": "15-25 minutes"
+  "setupComplexity": "easy",
+  "setupTime": "2-15 minutes"
 }
