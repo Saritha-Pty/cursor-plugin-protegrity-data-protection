@@ -1,39 +1,39 @@
 ---
 name: data-protection
-description: Protect and unprotect sensitive data using Protegrity's tokenization-style protection APIs.
+description: Protect and unprotect sensitive data using Protegrity tokenization workflows.
 ---
 
-# Data Protection (Tokenization)
+# Data Protection
 
-Use this skill for enterprise-grade data protection with reversible tokenization.
+Use this skill when the customer wants reversible protection using tokenization.
+
+## Customer goal
+
+Help the customer protect sensitive values so they can be restored later by an authorized user.
 
 ## When to use
 
-- When you need to preserve data structure while protecting values
-- For secure token-based workflows
-- When authorized users need to unprotect data later
-- For compliance with data minimization requirements
+- When the customer wants tokenization
+- When the customer needs to restore a protected value
+- When a workflow must keep data usable but protected
 
-## Instructions
+## What the customer needs
 
-### Protect Data
+- Protegrity AI Developer Edition account
+- `DEV_EDITION_EMAIL`
+- `DEV_EDITION_PASSWORD`
+- `DEV_EDITION_API_KEY`
+- Official Protegrity Developer Edition SDK installed
 
-1. Set environment variables for authentication:
-   - `DEV_EDITION_EMAIL`: Registration email
-   - `DEV_EDITION_PASSWORD`: Provided password
-   - `DEV_EDITION_API_KEY`: Provided API key
-2. Select the sensitive data to protect.
-3. Specify the policy user and data element type.
-4. The API will return a protected token.
-5. Use the token in workflows; original data remains secure.
+## What this skill should do
 
-### Unprotect Data
+1. Ask whether the customer wants to protect or unprotect.
+2. Confirm the required environment variables are set.
+3. Use the official Developer Edition protection flow.
+4. Show the result in a simple message.
+5. Explain that the customer must keep the token safe.
 
-1. Provide the protected token.
-2. Confirm you have authorization to unprotect.
-3. The API will return the original data.
-4. Use with caution; log all unprotection operations.
+## Notes
 
-## Policy Users and Data Elements
-
-For current roles, users, and data element definitions, refer to [Understanding Users and Roles](https://developer.docs.protegrity.com/docs/running/).
+- Keep credentials out of source control.
+- This workflow is only for the tokenization feature.

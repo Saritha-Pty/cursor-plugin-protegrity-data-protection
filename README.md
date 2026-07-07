@@ -1,10 +1,10 @@
 # Protegrity Data Protection Cursor Plugin
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.1.0-green.svg)](plugins/protegrity-data-protection/.cursor-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/version-1.1.1-green.svg)](plugins/protegrity-data-protection/.cursor-plugin/plugin.json)
 [![Cursor Plugin](https://img.shields.io/badge/cursor-plugin-blueviolet.svg)](https://www.cursor.com)
 
-A customer-friendly Cursor IDE plugin for Protegrity AI Developer Edition that helps new users discover sensitive data, protect prompts, redact content, generate synthetic data, and use guardrail workflows without taking control away from the user.
+A customer-friendly Cursor IDE plugin for Protegrity AI Developer Edition that helps new users discover sensitive data, protect prompts, redact content, generate synthetic data, anonymize datasets, and use guardrail workflows without taking control away from the user.
 
 ## What this plugin helps you do
 
@@ -13,6 +13,7 @@ A customer-friendly Cursor IDE plugin for Protegrity AI Developer Edition that h
 - Protect and unprotect text using Developer Edition tokenization APIs
 - Evaluate conversation risk with semantic guardrails
 - Generate synthetic data for safe testing
+- Anonymize dataset fields
 - Follow simple, guided setup steps based on the feature you want
 
 ## What changed in this version
@@ -31,11 +32,6 @@ Use this when you want to find PII in text, code, or documents.
 **Requires:**
 - Docker Desktop
 - Developer Edition local services for data discovery
-
-**Useful outputs:**
-- Entity detection
-- Sensitivity classification
-- Next-step guidance for redaction or protection
 
 ### 2) Redact or mask data
 Use this when you want to remove or hide sensitive data from shared text.
@@ -68,6 +64,13 @@ Use this when you want test data that is safer than production data.
 - Docker Desktop
 - Developer Edition synthetic data service
 
+### 6) Anonymize data
+Use this when you want to anonymize structured datasets while keeping them useful.
+
+**Requires:**
+- Docker Desktop
+- Developer Edition anonymization service
+
 ## Recommended setup path for new users
 
 1. Install the plugin in Cursor
@@ -88,7 +91,7 @@ Use this when you want test data that is safer than production data.
 ## Components
 
 - Rules for privacy-safe behavior
-- Skills for discovery, redaction, protection, guardrails, and synthetic data
+- Skills for discovery, redaction, protection, guardrails, synthetic data, and anonymization
 - Commands for direct user actions
 - Setup and prerequisite guides
 

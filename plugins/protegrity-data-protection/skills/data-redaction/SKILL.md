@@ -1,34 +1,38 @@
 ---
 name: data-redaction
-description: Find and redact or mask detected PII entities in text.
+description: Remove or hide sensitive data after the customer reviews what was found.
 ---
 
 # Data Redaction
 
-Use this skill to remove or mask sensitive information from your text.
+Use this skill when the customer wants to remove or mask sensitive information from text.
+
+## Customer goal
+
+Help the customer safely share or store text with sensitive values removed or hidden.
 
 ## When to use
 
-- Before logging or storing data
-- When preparing text for display to users
-- During data sanitization workflows
-- When creating anonymized datasets
+- Before sharing text outside the team
+- Before logging content
+- Before storing prompts or responses
+- When the customer asks to hide sensitive values
 
-## Instructions
+## What the customer needs
 
-1. Select the text containing sensitive data.
-2. Choose redaction method:
-   - **Redact**: Remove the entity completely
-   - **Mask**: Replace with configurable character (default: #)
-3. Specify which entity types to target.
-4. Review the redacted output before using.
-5. Save or export the sanitized data.
+- Docker Desktop
+- Protegrity AI Developer Edition local data discovery service
 
-## Configuration
+## What this skill should do
 
-Edit the Protegrity configuration to customize:
+1. Let the customer choose redact or mask.
+2. Use the discovery results to find sensitive values.
+3. Apply the selected redaction method.
+4. Show the sanitized output.
+5. Tell the customer what changed in plain language.
 
-- `method`: "redact" or "mask"
-- `masking_char`: Character for masking (default "#")
-- `classification_score_threshold`: Minimum confidence score (0-1)
-- `named_entity_map`: Custom entity type labels
+## Guidance
+
+- **Redact** means remove the value.
+- **Mask** means replace it with a visible placeholder.
+- Keep the customer in control of the final output.

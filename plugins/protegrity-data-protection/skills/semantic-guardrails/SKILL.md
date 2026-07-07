@@ -1,39 +1,35 @@
 ---
 name: semantic-guardrails
-description: Evaluate conversation risk and PII exposure in multi-turn AI interactions.
+description: Check prompts and conversations for risk before the customer sends them to an AI model.
 ---
 
 # Semantic Guardrails
 
-Use this skill to apply guardrails to GenAI conversations and detect privacy risks.
+Use this skill when the customer wants to review prompt or conversation risk.
+
+## Customer goal
+
+Help the customer understand whether a prompt or conversation may contain sensitive content or risky instructions.
 
 ## When to use
 
-- Before sending multi-turn conversations to LLMs
-- When evaluating chatbot interactions for PII exposure
-- During security assessment of AI workflows
-- For continuous monitoring of conversation risk
+- Before sending prompts to an AI model
+- When reviewing an AI conversation
+- When checking for privacy risks
 
-## Instructions
+## What the customer needs
 
-1. Provide the conversation messages (multi-turn).
-2. The skill calls Protegrity's semantic guardrail API.
-3. Receive message-level risk scores and PII detection results.
-4. Receive conversation-level aggregated risk assessment.
-5. Take appropriate action (block, redact, or allow) based on risk thresholds.
+- Docker Desktop
+- Protegrity AI Developer Edition semantic guardrail service
 
-## Risk Scoring
+## What this skill should do
 
-- **Message Risk Score**: Evaluates individual messages for:
-  - Sensitive data exposure
-  - Prompt injection risks
-  - Compliance violations
+1. Ask the customer for the prompt or conversation.
+2. Scan it with the semantic guardrail service.
+3. Summarize the risk clearly.
+4. Recommend the next action the customer can take.
 
-- **Conversation Risk Score**: Aggregates across multi-turn exchanges:
-  - Cumulative PII exposure
-  - Pattern-based risk detection
-  - Historical context analysis
+## Guidance
 
-## Configuration
-
-Customize risk thresholds in your Protegrity configuration to trigger different actions.
+- Use short, plain-language results.
+- Keep the customer in control of what gets sent to the model.

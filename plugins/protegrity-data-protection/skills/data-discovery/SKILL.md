@@ -1,40 +1,51 @@
 ---
 name: data-discovery
-description: Discover and enumerate PII entities in unstructured text using Protegrity classification APIs.
+description: Discover and classify sensitive data, then guide the next Protegrity action.
 ---
 
 # Data Discovery
 
-Use this skill to identify and analyze personally identifiable information in your text.
+Use this skill when the customer wants to find sensitive data in text, code, logs, or documents.
+
+## Customer goal
+
+Help the customer identify what kind of sensitive data is present, then suggest the next action:
+- redact or mask it
+- protect it with tokenization
+- review conversation risk
 
 ## When to use
 
-- Before sending user input to AI models
-- When analyzing logs or data samples
-- During security audits of workflows
-- When preparing data for external processing
+- Before sending text to an AI model
+- When reviewing code, logs, or prompts
+- When preparing content for sharing
+- When the customer wants to know what sensitive data exists
 
-## Instructions
+## What the customer needs
 
-1. Select or provide the text to analyze.
-2. The skill will call Protegrity's data discovery API to classify and detect entities.
-3. Review the detected entities with confidence scores.
-4. Decide on appropriate protection method (mask, redact, or protect).
-5. Apply the chosen protection before using the data in AI workflows.
+- Docker Desktop
+- Protegrity AI Developer Edition local data discovery service
 
-## Supported Entity Types
+## What this skill should do
+
+1. Ask the customer to provide or select the text.
+2. Classify the text using the Developer Edition data discovery service.
+3. Show the sensitive entity types found.
+4. Keep the explanation short and clear.
+5. Offer the next best step in customer language.
+
+## Supported entity examples
 
 - PERSON
 - LOCATION
-- SOCIAL_SECURITY_ID
-- PHONE_NUMBER
 - EMAIL_ADDRESS
+- PHONE_NUMBER
+- SOCIAL_SECURITY_ID
 - CREDIT_CARD_NUMBER
-- AGE
 - USERNAME
 - IP_ADDRESS
 - ACCOUNT_NUMBER
 - PASSPORT_NUMBER
 - DRIVER_LICENSE_NUMBER
 
-For the complete list, refer to [Supported Classification Entities](https://developer.docs.protegrity.com/docs/entities/).
+For the full list, see the Protegrity Developer Edition docs.
